@@ -1,0 +1,60 @@
+buildscript {
+	repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    
+    apply from: "${sourceFile.parent}/common.gradle"
+    
+    dependencies {
+    	classpath "com.badlogicgames.gdx:gdx-tools:$gdxToolingVersion"
+    	classpath "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxToolingVersion"
+    	classpath "com.badlogicgames.gdx:gdx-platform:$gdxToolingVersion:natives-desktop"
+    }
+}
+
+apply plugin: 'java'
+
+// TODO download locally with precise version if possible
+task gdxHieroDownload(type: Exec, group: 'gdx') {
+	def tmpDir = System.getProperty('java.io.tmpdir')
+	def tmpFile = "$tmpDir/runnable-hiero.jar"
+	commandLine 'wget', '-O', tmpFile, 'https://libgdx.badlogicgames.com/nightlies/runnables/runnable-hiero.jar'
+	outputs.upToDateWhen { new File(tmpFile).exists() }
+}
+
+task gdxHieroRun(type: Exec, dependsOn: gdxHieroDownload, group: 'gdx') {
+	def tmpDir = System.getProperty('java.io.tmpdir')
+	def tmpFile = "$tmpDir/runnable-hiero.jar"
+	commandLine 'java', '-jar', tmpFile
+}
+
+def gdxHieroEdit(src){
+	task "gdxHieroEdit_$src"(type: Exec, dependsOn: gdxHieroDownload, group: 'gdx'){
+		def tmpDir = System.getProperty('java.io.tmpdir')
+		def tmpFile = "$tmpDir/runnable-hiero.jar"
+		commandLine 'java', '-jar', tmpFile, "-i", src
+	}
+}
+
+def gdxHieroExport(src, dst){
+	gdxHieroEdit(src)
+	task "gdxHieroExport_$src"(type: Exec, dependsOn: gdxHieroDownload, group: 'gdx'){
+		new File(dst).mkdirs()
+		def inFile = new File(src)
+		def name = inFile.name.take(inFile.name.lastIndexOf('.'))
+		def tmpDir = System.getProperty('java.io.tmpdir')
+		def tmpFile = "$tmpDir/runnable-hiero.jar"
+		def outFile1 = new File("$dst/$name" + ".png")
+		def outFile2 = new File("$dst/$name" + ".fnt")
+		commandLine 'java', '-jar', tmpFile, '-b', '-i', inFile, '-o', "$dst/$name"
+		outputs.upToDateWhen { outFile1.exists() && inFile.lastModified() < outFile1.lastModified() && outFile2.exists() && inFile.lastModified() < outFile2.lastModified() }
+	}
+}
+
+ext {
+    gdxHieroEdit = this.&gdxHieroEdit
+    gdxHieroExport = this.&gdxHieroExport
+}
+
+
