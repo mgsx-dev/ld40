@@ -14,6 +14,8 @@ public class Rules {
 	public static int levelID = 0;
 	public static String levelMap;
 	
+	public static int tailsWhenExit;
+	
 	
 	public static boolean initLevel() 
 	{

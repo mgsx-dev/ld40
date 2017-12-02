@@ -325,6 +325,7 @@ public class LevelScreen extends ScreenAdapter
 				heroExiting = true;
 				dir = Dir.UP; // XXX force direction to prevent a bug
 				actionTime = 0;
+				Rules.tailsWhenExit = tails.size;
 				LevelAssets.i.sndWin.play();
 			}else{
 				updateHeroControl();

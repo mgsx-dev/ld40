@@ -124,6 +124,21 @@ public class MapHUD extends Table
 
 	public void setLevelComplete() {
 		
+		ScoreHUD score = new ScoreHUD(getSkin());
+		
+		final Table popup = popup(score);
+		
+		score.addListener(new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				popup.remove();
+				setNextPanel();
+			}
+		});
+	}
+	
+	private void setNextPanel(){
 		Table panel = new Table(getSkin());
 		panel.setBackground("panel");
 		
