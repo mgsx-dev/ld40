@@ -30,12 +30,16 @@ import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import net.mgsx.ld40.assets.LevelAssets;
 import net.mgsx.ld40.assets.LevelAssets.Dir;
 import net.mgsx.ld40.model.Enemy;
+import net.mgsx.ld40.model.Rules;
 import net.mgsx.ld40.model.Tail;
+import net.mgsx.ld40.ui.MapHUD;
 import net.mgsx.ld40.utils.MapIntersector;
 
 public class LevelScreen extends ScreenAdapter
@@ -75,9 +79,21 @@ public class LevelScreen extends ScreenAdapter
 
 	private Vector2 exitPosition;
 	
-	public LevelScreen(String mapName) {
+	private Stage stage;
+	private MapHUD hud;
+	
+	public LevelScreen() {
+		
+		stage = new Stage(new ScreenViewport());
+		hud = new MapHUD(this, LevelAssets.i.skin);
+		hud.setFillParent(true);
+		stage.addActor(hud);
+		Gdx.input.setInputProcessor(stage);
+		
+		hud.setGetReady();
+		
 		shapeRenderer = new ShapeRenderer();
-		map = new TmxMapLoader().load(mapName);
+		map = new TmxMapLoader().load(Rules.levelMap);
 		mapWidth = map.getProperties().get("width", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class);
 		groundLayer = (TiledMapTileLayer) map.getLayers().get(0);
@@ -103,6 +119,8 @@ public class LevelScreen extends ScreenAdapter
 		
 		camera.position.x = playerPosition.x;
 		camera.position.y = playerPosition.y;
+		
+		clipCameraToMap();
 		
 		for(MapObject object : map.getLayers().get("objects").getObjects()){
 			String type = object.getProperties().get("type", null, String.class);
@@ -142,6 +160,10 @@ public class LevelScreen extends ScreenAdapter
 	private Vector2 p = new Vector2();
 
 	private boolean heroExiting;
+
+	private boolean isDying;
+
+	public boolean isPaused = true;
 	
 	
 	private void updateHeroControl(){
@@ -202,12 +224,45 @@ public class LevelScreen extends ScreenAdapter
 	@Override
 	public void render(float delta) {
 		
+		// TODO pause screen but hide all !!!
+		
+//		if(!isPaused && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+//			isPaused = true;
+//			hud.setGetReady();
+//		}else{
+//			stage.act(delta);
+//		}
+		
+		stage.act(delta);
+		
+		if(isPaused){
+			delta = 0;
+		}
+		
 		time += delta;
 		
 		float playerRadius = 64 * .5f * 0.7f;
 		float enemyRadius = 64 * .5f;
 		
-		if(heroTarget != null){
+		if(isPaused){
+			// DO nothing !
+		}
+		else if(isDying){
+			if(tails.size == 0){
+				actionTime += delta * .5f;
+				if(actionTime > 1){
+					isPaused  = true;
+					hud.setGameOver();
+				}
+			}else{
+				if(!tails.peek().isDying) tails.peek().setDying();
+				if(tails.peek().animation == null){
+					tails.pop();
+				}
+			}
+			
+		}
+		else if(heroTarget != null){
 			float eatSpeed = 2;
 			eatTime += delta * eatSpeed;
 			
@@ -247,8 +302,8 @@ public class LevelScreen extends ScreenAdapter
 		}
 		else if(heroExiting){
 			if(tails.size <= 0){
-				// TODO end : spawn transition from main screen.
-				((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+				isPaused = true;
+				hud.setLevelComplete();
 			}else{
 				updateHeroMove();
 				if(tails.first().position.dst(exitPosition) < 64){ // XXX
@@ -278,7 +333,7 @@ public class LevelScreen extends ScreenAdapter
 				Vector2 b = enemy.path.get(enemy.pathIndex + enemy.pathDir);
 				float len = a.dst(b);
 				
-				enemy.time += 1 * enemy.speed / len; // XXX
+				enemy.time += delta * 60 * enemy.speed / len; // XXX
 				if(enemy.time > 1){
 					enemy.time = 0;
 					enemy.pathIndex += enemy.pathDir;
@@ -310,6 +365,11 @@ public class LevelScreen extends ScreenAdapter
 				{
 					hurtingEnemy = enemy;
 					actionTime = 0;
+					
+					Rules.life--;
+					if(Rules.life <= 0){
+						isDying = true;
+					}
 					
 					// TODO ray cast collider !
 					int dx = -(dir == Dir.RIGHT ? 1 : (dir == Dir.LEFT ? -1 : 0));
@@ -349,12 +409,7 @@ public class LevelScreen extends ScreenAdapter
 			camera.position.y = MathUtils.lerp(camera.position.y, playerPosition.y, progress);
 			
 			// clip to map
-			
-			float mapWidth = map.getProperties().get("width", Integer.class) * 64;
-			float mapHeight = map.getProperties().get("height", Integer.class) * 64;
-			
-			camera.position.x = MathUtils.clamp(camera.position.x, Gdx.graphics.getWidth()/2, mapWidth - Gdx.graphics.getWidth()/2);
-			camera.position.y = MathUtils.clamp(camera.position.y, Gdx.graphics.getHeight()/2, mapHeight - Gdx.graphics.getHeight()/2);
+			clipCameraToMap();
 		}
 		
 		camera.update();
@@ -389,6 +444,8 @@ public class LevelScreen extends ScreenAdapter
 		
 		renderer.render(FG_LAYERS);
 
+		stage.draw();
+		
 		if(debug){
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.setProjectionMatrix(camera.combined);
@@ -402,6 +459,15 @@ public class LevelScreen extends ScreenAdapter
 		
 	}
 	
+	private void clipCameraToMap() {
+		float mapWidth = map.getProperties().get("width", Integer.class) * 64;
+		float mapHeight = map.getProperties().get("height", Integer.class) * 64;
+		
+		camera.position.x = MathUtils.clamp(camera.position.x, Gdx.graphics.getWidth()/2, mapWidth - Gdx.graphics.getWidth()/2);
+		camera.position.y = MathUtils.clamp(camera.position.y, Gdx.graphics.getHeight()/2, mapHeight - Gdx.graphics.getHeight()/2);
+
+	}
+
 	/**
 	 * @param nx
 	 * @param ny
@@ -424,6 +490,6 @@ public class LevelScreen extends ScreenAdapter
 		camera.setToOrtho(false, width, height);
 		camera.position.x = playerPosition.x;
 		camera.position.y = playerPosition.y;
-
+		stage.getViewport().update(width, height, true);
 	}
 }

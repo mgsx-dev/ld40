@@ -21,12 +21,12 @@
  </tileset>
  <layer name="ground" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztlGEKgCAMhT2H3cBOlJ4gO0F1+SY0GDKhYiLB++D9mcM359Q5AAAAkoUUScko7y0rKZM2xYuVGnm9/DmWxRrHgrPrQTnnrOxb+weRZ9kDzSdWXpp6+T/VSH9POgf6W87/TjpuTQP8GX4HXtTTqotn1PIvav0t8n22ZAHfQz1XJc7n13pjNYdfagMAgL9wAZJ4PRQ=
+   eJztlNEJgDAMRDtH3UAnUiewTqAubwIGQolFJbU/9+BAQvDSazQEAAAAmpE0kWanvrcspERaDS+tweir5S81S33wy4DPKefS7y35e2aQ+/AMOuu//Z+qpX8kHQ39Pfd/I+2k7oN/cpxDcojXPCJrLtlRfvb6Dq1/gK7Xvgu5h3yvuC4Z5NlY/TW4mw20Re8hAKDMCa64P4s=
   </data>
  </layer>
  <objectgroup name="objects">
-  <object id="1" name="player" x="768" y="1028" width="26" height="25"/>
-  <object id="2" name="m1" type="mushroom" x="602" y="864">
+  <object id="1" name="player" x="465" y="705" width="26" height="25"/>
+  <object id="2" name="m1" type="mushroom" x="795" y="1187">
    <polyline points="0,0 -247,0 -249,102"/>
   </object>
   <object id="3" name="m2" type="mushroom" x="831" y="949">
@@ -38,7 +38,7 @@
   <object id="5" name="b2" type="balls" x="1110" y="876">
    <polyline points="0,0 1,152"/>
   </object>
-  <object id="6" name="exit" x="1382" y="1298" width="24" height="31"/>
+  <object id="6" name="exit" x="1298" y="1210" width="24" height="31"/>
  </objectgroup>
  <layer name="Tile Layer 2" width="32" height="32">
   <data encoding="base64" compression="zlib">

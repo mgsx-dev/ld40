@@ -13,8 +13,9 @@ public class Tail {
 	public Sprite sprite = new Sprite();
 	public float time;
 	public Vector2 position = new Vector2();
-	private Animation<Sprite> animation, nextAnimation;
+	public Animation<Sprite> animation, nextAnimation;
 	public float radius = 16;
+	public boolean isDying;
 	
 	public void setCreate(Vector2 head){
 		animation = LevelAssets.i.tailGrow;
@@ -40,9 +41,17 @@ public class Tail {
 			animation = nextAnimation;
 			time = 0;
 		}
-		
-		sprite.set(animation.getKeyFrame(time));
+		if(animation != null){
+			sprite.set(animation.getKeyFrame(time));
+		}
 		sprite.setPosition(position.x, position.y);
+	}
+
+	public void setDying() {
+		isDying = true;
+		animation = LevelAssets.i.tailExplode;
+		time = 0;
+		nextAnimation = null;
 	}
 	
 }
