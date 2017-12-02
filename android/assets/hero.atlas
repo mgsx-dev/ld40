@@ -1,6 +1,6 @@
 
 hero.png
-size: 512,256
+size: 1024,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -235,3 +235,101 @@ hero
   orig: 64, 64
   offset: 0, 0
   index: 29
+tail
+  rotate: false
+  xy: 464, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 1
+tail
+  rotate: false
+  xy: 464, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 10
+tail
+  rotate: false
+  xy: 464, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 5
+tail
+  rotate: false
+  xy: 398, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 2
+tail
+  rotate: false
+  xy: 464, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 3
+tail
+  rotate: false
+  xy: 530, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 4
+tail
+  rotate: false
+  xy: 464, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 6
+tail
+  rotate: false
+  xy: 530, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 7
+tail
+  rotate: false
+  xy: 596, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 8
+tail
+  rotate: false
+  xy: 530, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 9
+tail
+  rotate: false
+  xy: 596, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 11
+tail
+  rotate: false
+  xy: 662, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 12
+tail
+  rotate: false
+  xy: 596, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 13
+tail
+  rotate: false
+  xy: 662, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 14

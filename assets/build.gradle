@@ -33,9 +33,10 @@ assetsTasks << blenderRenderFrame("src/tileset.blend", 1, "$assetsDir/tileset.pn
 assetsTasks << blenderRenderFrame("src/mushroom.blend", 1, "$assetsDir/mushroom.png")
 
 def heroFramesTask = blenderRenderAnimation("src/hero.blend", "$buildDir/hero/hero")
+def tailFramesTask = blenderRenderAnimation("src/tail.blend", "$buildDir/hero/tail")
 
 def heroAnimTask = gdxAtlasPack("$buildDir/hero", "../android/assets/hero")
-heroAnimTask.dependsOn << heroFramesTask
+heroAnimTask.dependsOn += [heroFramesTask, tailFramesTask]
 
 assetsTasks << heroAnimTask
 

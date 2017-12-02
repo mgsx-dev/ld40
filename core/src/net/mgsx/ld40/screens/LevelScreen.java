@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.Array;
 import net.mgsx.ld40.assets.LevelAssets;
 import net.mgsx.ld40.assets.LevelAssets.Dir;
 import net.mgsx.ld40.model.Enemy;
+import net.mgsx.ld40.model.Tail;
 import net.mgsx.ld40.utils.MapIntersector;
 
 public class LevelScreen extends ScreenAdapter
@@ -61,6 +62,8 @@ public class LevelScreen extends ScreenAdapter
 	private static final int [] BG_LAYERS = {0,1};
 	
 	private Array<Enemy> enemies = new Array<Enemy>();
+	
+	private Array<Tail> tails = new Array<Tail>();
 	
 	private Enemy heroTarget = null;
 	private float eatTime;
@@ -194,7 +197,7 @@ public class LevelScreen extends ScreenAdapter
 		
 		time += delta;
 		
-		float playerRadius = 64 * .5f;
+		float playerRadius = 64 * .5f * 0.7f;
 		float enemyRadius = 64 * .5f;
 		
 		if(heroTarget != null){
@@ -210,6 +213,16 @@ public class LevelScreen extends ScreenAdapter
 				enemies.removeValue(heroTarget, true);
 				// TODO inc hero stats and explosion or something ...
 				heroTarget = null;
+				
+				// TODO offset to tail
+				Vector2 nextPosition = playerPosition;
+				if(tails.size > 0){
+					nextPosition = tails.peek().position;
+				}
+				Tail tail = new Tail();
+				tail.setCreate(nextPosition); 
+				tails.add(tail);
+				
 			}
 			
 		}else{
@@ -252,6 +265,15 @@ public class LevelScreen extends ScreenAdapter
 			}
 		}
 		
+		// update tails
+		Vector2 head = playerPosition;
+		float distance = playerRadius;
+		for(Tail tail : tails){
+			tail.update(delta, head, distance);
+			head = tail.position;
+			distance = tail.radius;
+		}
+		
 
 		float progress = 1f * delta;
 		if(playerPosition.dst(camera.position.x, camera.position.y) > 0){
@@ -282,6 +304,10 @@ public class LevelScreen extends ScreenAdapter
 		for(Enemy enemy : enemies){
 			
 			enemy.sprite.draw(batch);
+		}
+		
+		for(Tail tail : tails){
+			tail.sprite.draw(batch);
 		}
 		
 		Sprite hero = LevelAssets.i.hero.get(dir.ordinal()).getKeyFrame(time);
