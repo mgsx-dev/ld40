@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-down" width="32" height="32" tilewidth="64" tileheight="64" nextobjectid="6">
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="32" height="32" tilewidth="64" tileheight="64" nextobjectid="7">
  <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="256" columns="16">
   <image source="tileset.png" width="1024" height="1024"/>
   <terraintypes>
@@ -19,9 +19,9 @@
   <tile id="121" terrain="0,0,,"/>
   <tile id="122" terrain="0,,,"/>
  </tileset>
- <layer name="Tile Layer 1" width="32" height="32">
+ <layer name="ground" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztlAEKgCAMRT2P3aBOop6gOkF1+SY0GDKhYibBf/BBRfzbnDoHAABAEkiRlIz2PWUmLaRV8WKlyr5W/rzGGkmTGFvVIFTOLf09aRBzqxpoeUYRk5Z/S/+76umf7+Lo6G/Z/xtpvyT76yt/ht+BF/HU4uIetfyLan+LfJ8ta8H3UPZVXuf8tdpY9eGb2AAA4C+cHmA9Nw==
+   eJztlGEKgCAMhT2H3cBOlJ4gO0F1+SY0GDKhYiLB++D9mcM359Q5AAAAkoUUScko7y0rKZM2xYuVGnm9/DmWxRrHgrPrQTnnrOxb+weRZ9kDzSdWXpp6+T/VSH9POgf6W87/TjpuTQP8GX4HXtTTqotn1PIvav0t8n22ZAHfQz1XJc7n13pjNYdfagMAgL9wAZJ4PRQ=
   </data>
  </layer>
  <objectgroup name="objects">
@@ -38,10 +38,11 @@
   <object id="5" name="b2" type="balls" x="1110" y="876">
    <polyline points="0,0 1,152"/>
   </object>
+  <object id="6" name="exit" x="1382" y="1298" width="24" height="31"/>
  </objectgroup>
  <layer name="Tile Layer 2" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+   eJzt0ssJACAMBNHtv5RU6U28iB8iqzKBdxMnoCEpAABVOxnnMvqjcfezdujd6+zPDn1f/8Tfd/RvfIfVvX7o7+wGAK8ojlE/Mw==
   </data>
  </layer>
 </map>

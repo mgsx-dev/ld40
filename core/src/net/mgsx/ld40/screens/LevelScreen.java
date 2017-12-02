@@ -46,7 +46,6 @@ public class LevelScreen extends ScreenAdapter
 	private OrthographicCamera camera;
 	private Vector2 playerPosition;
 	private Vector2 playerVelocity = new Vector2();
-	private TiledMapTile playerTile;
 	private Batch batch;
 	private MapIntersector mapIntersector;
 	private float time;
@@ -72,10 +71,12 @@ public class LevelScreen extends ScreenAdapter
 	
 	private Enemy heroTarget = null;
 	private float eatTime;
+
+	private Vector2 exitPosition;
 	
 	public LevelScreen() {
 		shapeRenderer = new ShapeRenderer();
-		map = new TmxMapLoader().load("level1.tmx");
+		map = new TmxMapLoader().load("level0.tmx");
 		mapWidth = map.getProperties().get("width", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class);
 		groundLayer = (TiledMapTileLayer) map.getLayers().get(0);
@@ -92,17 +93,10 @@ public class LevelScreen extends ScreenAdapter
 		camera = new OrthographicCamera();
 		
 		MapLayer objectLayer = map.getLayers().get(1);
-		MapObject playerObject = objectLayer.getObjects().get("player");
-		if(playerObject instanceof RectangleMapObject){
-			playerPosition = ((RectangleMapObject) playerObject).getRectangle().getCenter(new Vector2());
-		}
 		
-		for(TiledMapTile tile : map.getTileSets().getTileSet(0)){
-			if("player".equals(tile.getProperties().get("name"))){
-				playerTile = tile;
-				break;
-			}
-		}
+		playerPosition = ((RectangleMapObject) objectLayer.getObjects().get("player")).getRectangle().getCenter(new Vector2());
+		
+		exitPosition = ((RectangleMapObject)objectLayer.getObjects().get("exit")).getRectangle().getCenter(new Vector2());
 		
 		batch = new SpriteBatch();
 		
@@ -145,10 +139,12 @@ public class LevelScreen extends ScreenAdapter
 	}
 	
 	private Vector2 p = new Vector2();
+
+	private boolean heroExiting;
 	
 	
-	private void updateHeroMove(){
-		float speed = 2 + tails.size / 2;
+	private void updateHeroControl(){
+		
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
 			dir = Dir.RIGHT;
 		}else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
@@ -160,12 +156,20 @@ public class LevelScreen extends ScreenAdapter
 			dir = Dir.DOWN;
 		}
 		
+		
+		
+	}
+	
+	private void updateHeroMove(){
+		
+		float speed = 2 + tails.size / 2;
+		
 		playerVelocity.x = (dir == Dir.RIGHT ? 1 : (dir == Dir.LEFT ? -1 : 0)) * speed;
 		playerVelocity.y = (dir == Dir.UP ? 1 : (dir == Dir.DOWN ? -1 : 0)) * speed;
 		
 		playerPosition.add(playerVelocity);
-		
 	}
+	
 	private void checkHeroWalls(){
 		// check border collision (TODO fix the rounding depends on direction...)
 		int ix =  MathUtils.round(playerPosition.x / 64);
@@ -240,9 +244,28 @@ public class LevelScreen extends ScreenAdapter
 			}
 			
 		}
+		else if(heroExiting){
+			if(tails.size <= 0){
+				// TODO end : spawn transition from main screen.
+				
+			}else{
+				updateHeroMove();
+				if(tails.first().position.dst(exitPosition) < 64){ // XXX
+					playerPosition.set(tails.first().position);
+					tails.removeIndex(0);
+				}
+			}
+		}
 		else{
-			updateHeroMove();
-			checkHeroWalls();
+			if(exitPosition.dst(playerPosition) < 64){ // XXX maybe use cell
+				heroExiting = true;
+				dir = Dir.UP; // XXX force direction to prevent a bug
+				actionTime = 0;
+			}else{
+				updateHeroControl();
+				updateHeroMove();
+				checkHeroWalls();
+			}
 		}
 		
 		

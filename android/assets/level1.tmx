@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="left-down" width="32" height="32" tilewidth="64" tileheight="64" nextobjectid="24">
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="32" height="32" tilewidth="64" tileheight="64" nextobjectid="26">
  <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="256" columns="16">
   <image source="tileset.png" width="1024" height="1024"/>
   <terraintypes>
    <terrain name="New Terrain" tile="105"/>
   </terraintypes>
-  <tile id="41" terrain="0,0,0,"/>
-  <tile id="42" terrain="0,0,,0"/>
-  <tile id="57" terrain="0,,0,0"/>
-  <tile id="58" terrain=",0,0,0"/>
+  <tile id="25" terrain="0,0,0,"/>
+  <tile id="26" terrain="0,0,,0"/>
+  <tile id="41" terrain="0,,0,0"/>
+  <tile id="42" terrain=",0,0,0"/>
   <tile id="88" terrain=",,,0"/>
   <tile id="89" terrain=",,0,0"/>
   <tile id="90" terrain=",,0,"/>
@@ -18,10 +18,15 @@
   <tile id="120" terrain=",0,,"/>
   <tile id="121" terrain="0,0,,"/>
   <tile id="122" terrain="0,,,"/>
+  <tile id="169">
+   <properties>
+    <property name="solid" type="bool" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Tile Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztllEOwkAIRPc8egN7EusJqieoXl742ATJDrAVazRLMj/dto+SAVrKiD3jTJpJly+9ayFdSaeEHOq7bhue6X1u8HP5B9Ijic9emoG0x7bk7PEtaU6m/1fSHejo8LNqgALVeTVy24Pvnf0Kv87els/5bCqvvSHPM/ja+7IHp2L3wSf4PE+093v5uqZohnBIH+tZVvtS5hHhL+o76jtQnbw6yvkg87P4kWtRPopsfu8s7eWj/SJ9Hq2B7E2PL+/t2TPIx17O+lv5Xu3H1o6J9L9Wa/+39pn1j+DtXyv3d/89UL7ZjBEj/jmeiyZ3qg==
+   eJztltsNwjAMRTMHbEAnapmgZYLC8iRSI5mr+FXcSqBY8k/zOI51bTelbt/Y4tw/Zp+y3wPY48b33DVvZ24BMdS7HjvOeM91fiz/kv0VxC9amhhHje2JWeNLjpxI/a/Zn4xfFX5UDjjj8rwKsZ3B19Z+hV/7eEvnZW1In7VB1yP4qH1ag0OS6+AIfuknqH0vH3PK9ZBiVMfYy2pd0jgs/BneUe/g8qTlkfYHGp/Et3yz8jmL5nt7qZfPzReqc2sOaG1qfLrXM2c4HWsx41vLXtRja8ZY6t8yG1vzTPpHsMxf7A3Wuy0mzd9ITrdu/2pvGkt3wg==
   </data>
  </layer>
  <objectgroup name="objects">
@@ -64,10 +69,11 @@
   <object id="23" type="mushroom" x="1788" y="878">
    <polyline points="0,0 354,0"/>
   </object>
+  <object id="25" name="exit" x="1028" y="164" width="52" height="54"/>
  </objectgroup>
  <layer name="Tile Layer 2" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+   eJztlFEKwDAIQ73/UXrK/Y4xajQ6y0ggP4X2BRtcZrbkz3zXxFtPiS9+BX8nNnMXn80wzc90Y5pf3YEp/pu8XnTzPZ3OR+52zj/CR+aY5Xtn7D928CMZMnxEmd7u+FGxmSeE8Ct3APp29Q5iOLL8V19DGduI
   </data>
  </layer>
 </map>
