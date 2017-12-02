@@ -44,7 +44,7 @@ public class LevelAssets {
 		
 		tailIdle = createAnimation(tailSprites, .5f, PlayMode.LOOP_PINGPONG, 1, 2);
 		tailGrow = createAnimation(tailSprites, .2f, PlayMode.REVERSED, 5, 9);
-		tailExplode = createAnimation(tailSprites, .1f, PlayMode.NORMAL, 10, 14);
+		tailExplode = createAnimation(tailSprites, .08f, PlayMode.NORMAL, 10, 14);
 		tailBump = createAnimation(tailSprites, .2f, PlayMode.LOOP_PINGPONG, 1, 4);
 		
 		enemiesAtlas = new TextureAtlas(Gdx.files.internal("enemies.atlas"));

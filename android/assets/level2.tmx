@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="32" height="32" tilewidth="64" tileheight="64" nextobjectid="58">
+ <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="256" columns="16">
+  <image source="tileset.png" width="1024" height="1024"/>
+  <terraintypes>
+   <terrain name="New Terrain" tile="105"/>
+  </terraintypes>
+  <tile id="25" terrain="0,0,0,"/>
+  <tile id="26" terrain="0,0,,0"/>
+  <tile id="41" terrain="0,,0,0"/>
+  <tile id="42" terrain=",0,0,0"/>
+  <tile id="88" terrain=",,,0"/>
+  <tile id="89" terrain=",,0,0"/>
+  <tile id="90" terrain=",,0,"/>
+  <tile id="104" terrain=",0,,0"/>
+  <tile id="105" terrain="0,0,0,0"/>
+  <tile id="106" terrain="0,,0,"/>
+  <tile id="120" terrain=",0,,"/>
+  <tile id="121" terrain="0,0,,"/>
+  <tile id="122" terrain="0,,,"/>
+  <tile id="169">
+   <properties>
+    <property name="solid" type="bool" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztlk0OgkAMhUc4AWEnN9ATqYl7NXEPXt4h4cXadEoHOqxo8jaK89E3/TGEPWhcoq5Et43Z56jnpCbq5cx4K989CBvamt9M3Crq4Mwf/b2H9J0+Ji5yP0Z9HPnwN5UT9z83d9Sull+rnNtHDVHdQr4lv9pw7tw5PJA3eucUZB+s5+bwec+idqXfl+CjZ8ZaHcL//cEHaHxP7f55Pvw5OhvhLWqG9gnqjM8S9LbGR+5S79H+SJ1B3596QqX1tOY95XNvqceWPNfwqbeV8Nma2a3xcde0xlIez/m8hM+f894PuXzP/WidYaX40u637CovPq0tyw7y5ueevwVfq+8SfDrfLbu0xP8jzM46/GqwDfIuK9X70jzlc64rwOc9oM3SXvhsjz1y4wt5BGhQ
+  </data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" name="player" x="822" y="880" width="26" height="25"/>
+  <object id="25" name="exit" x="1796" y="258" width="52" height="54"/>
+  <object id="26" name="m" type="mushroom" x="1000" y="994" width="58" height="56"/>
+  <object id="27" name="m" type="mushroom" x="1125" y="680" width="58" height="56"/>
+  <object id="28" name="m" type="mushroom" x="1281" y="520" width="58" height="56"/>
+  <object id="29" name="m" type="mushroom" x="965" y="1220" width="58" height="56"/>
+  <object id="30" name="m" type="mushroom" x="963" y="1346" width="58" height="56"/>
+  <object id="31" name="m" type="mushroom" x="965" y="1476" width="58" height="56"/>
+  <object id="32" name="m" type="mushroom" x="233" y="1702" width="58" height="56"/>
+  <object id="33" name="m" type="mushroom" x="361" y="1702" width="58" height="56"/>
+  <object id="34" name="m" type="mushroom" x="233" y="1576" width="58" height="56"/>
+  <object id="35" name="m" type="mushroom" x="359" y="1574" width="58" height="56"/>
+  <object id="36" name="b" type="balls" x="485" y="1640" width="58" height="56"/>
+  <object id="37" name="b" type="balls" x="195" y="1284" width="58" height="56"/>
+  <object id="38" name="b" type="balls" x="325" y="388" width="58" height="56"/>
+  <object id="39" name="b" type="balls" x="1577" y="744" width="58" height="56"/>
+  <object id="40" name="b" type="balls" x="1703" y="804" width="58" height="56"/>
+  <object id="41" name="b" type="balls" x="1831" y="674" width="58" height="56"/>
+  <object id="42" name="b" type="balls" x="1602" y="514">
+   <polyline points="0,0 380,-2"/>
+  </object>
+  <object id="43" name="b" type="balls" x="1664" y="452">
+   <polyline points="60,-4 256,-2"/>
+  </object>
+  <object id="44" name="l" type="life" x="295" y="166" width="58" height="56"/>
+  <object id="53" name="l" type="life" x="361" y="164" width="58" height="56"/>
+  <object id="54" name="l" type="life" x="425" y="168" width="58" height="56"/>
+  <object id="55" name="m" type="mushroom" x="295" y="230" width="58" height="56"/>
+  <object id="56" name="m" type="mushroom" x="359" y="230" width="58" height="56"/>
+  <object id="57" name="m" type="mushroom" x="421" y="230" width="58" height="56"/>
+ </objectgroup>
+ <layer name="Tile Layer 2" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztl+upwzAMhb1qZkgmSCfoGhkjjwmyQgYpARvEQdKRYij9UcGht3Wsz3pU111KKcuPa/giQ7Osr7Equ88y6Tfrc1YYmdjxeesM0bN5+dTsfMCZjeetmHD9BEVzm6mvtc6Ynnah9tnk8CfYH4l5NHzf2qp2Yy+LH8/h5X0w/KLd62/Cx/mC7Ml4jrGRk4lfOwfLacYiuUe+5kPz2cvX/n4TH1qNo3xtpmBvP821FafsJcl/OXt6+dl5hbno5WOtNB1C0b5/EpPHvwL8yKz0egz7S8Z9FZ6Hva5ZszZb79vXWtntf8gKfHnmbPwRfosJZeV/E3zZU0/uSdk+aLGzPrHqzSRN+mh+doWv1VvjYn7ae2Y9/e/lIMrHe9lG/EUk7+rMjso8il57VmP2u4AZ9mf2u2exvXkcEd632axjGuC1p75/+foAe3svAg==
+  </data>
+ </layer>
+</map>

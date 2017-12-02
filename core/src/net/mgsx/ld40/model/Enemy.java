@@ -20,13 +20,22 @@ public class Enemy {
 	public boolean isEatable;
 	public boolean isHurting;
 	public Vector2 position = new Vector2();
+	public float radius;
+	public boolean isLife;
 	
 	public Enemy(String type) {
 		if(type.equals("mushroom")){
 			isEatable = true;
+			radius = 32;
 		}
 		else if(type.equals("balls")){
 			isHurting = true;
+			radius = 16;
+		}
+		else if(type.equals("life")){
+			isEatable = true;
+			isLife = true;
+			radius = 32;
 		}
 	}
 	

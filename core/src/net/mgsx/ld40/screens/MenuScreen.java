@@ -32,8 +32,9 @@ public class MenuScreen extends ScreenAdapter
 		table.add("CRAZY SNAKE").row();
 		table.add("The Greedy Adventure").row();
 		table.add(createMenuButton("Play", 0)).row();
-		table.add(createMenuButton("Level 0", 0)).row();
-		table.add(createMenuButton("Level 1", 1)).row();
+		table.add(createMenuButton("Level 1", 0)).row();
+		table.add(createMenuButton("Level 2", 1)).row();
+		table.add(createMenuButton("Level 3", 2)).row();
 		
 		Table root = new Table();
 		root.add(table).expand().center();

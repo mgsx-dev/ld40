@@ -248,14 +248,14 @@ tail
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 10
+  index: 5
 tail
   rotate: false
   xy: 464, 134
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 5
+  index: 10
 tail
   rotate: false
   xy: 398, 2

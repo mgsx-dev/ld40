@@ -39,9 +39,16 @@ balls
   orig: 64, 64
   offset: 0, 0
   index: 5
-mushroom
+life
   rotate: false
   xy: 332, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+mushroom
+  rotate: false
+  xy: 398, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

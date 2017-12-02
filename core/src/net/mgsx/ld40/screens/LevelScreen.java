@@ -242,7 +242,6 @@ public class LevelScreen extends ScreenAdapter
 		time += delta;
 		
 		float playerRadius = 64 * .5f * 0.7f;
-		float enemyRadius = 64 * .5f;
 		
 		if(isPaused){
 			// DO nothing !
@@ -258,6 +257,8 @@ public class LevelScreen extends ScreenAdapter
 				if(!tails.peek().isDying) tails.peek().setDying();
 				if(tails.peek().animation == null){
 					tails.pop();
+					if(tails.size > 0)
+						LevelAssets.i.sndHurt.play();
 				}
 			}
 			
@@ -274,7 +275,6 @@ public class LevelScreen extends ScreenAdapter
 			if(eatTime > 1){
 				enemies.removeValue(heroTarget, true);
 				// TODO inc hero stats and explosion or something ...
-				heroTarget = null;
 				
 				// TODO offset to tail
 				Vector2 nextPosition = playerPosition;
@@ -285,6 +285,14 @@ public class LevelScreen extends ScreenAdapter
 				tail.setCreate(nextPosition); 
 				tails.add(tail);
 				
+				if(heroTarget.isLife){
+					if(Rules.life < Rules.maxLife){
+						Rules.life++;
+						LevelAssets.i.sndGUI.play(); // TODO snd life !
+					}
+				}
+					
+				heroTarget = null;
 			}
 			
 		}
@@ -352,7 +360,7 @@ public class LevelScreen extends ScreenAdapter
 			if(enemy.isEatable){
 				if(heroTarget == null){
 					float dst2 = playerPosition.dst2(enemy.position);
-					float radius = playerRadius + enemyRadius; // TODO extra range ?
+					float radius = playerRadius + enemy.radius;
 					if(dst2 < radius*radius){
 						heroTarget = enemy;
 						eatTime = 0;
@@ -362,7 +370,7 @@ public class LevelScreen extends ScreenAdapter
 				}
 			}else if(enemy.isHurting && hurtingEnemy == null){
 				float dst2 = playerPosition.dst2(enemy.position);
-				float radius = playerRadius + enemyRadius;
+				float radius = playerRadius + enemy.radius;
 				if(dst2 < radius*radius)
 				{
 					hurtingEnemy = enemy;
@@ -457,7 +465,7 @@ public class LevelScreen extends ScreenAdapter
 			shapeRenderer.setColor(Color.BLUE);
 			shapeRenderer.circle(playerPosition.x, playerPosition.y, playerRadius, 16);
 			for(Enemy enemy : enemies){
-				shapeRenderer.circle(enemy.sprite.getX(), enemy.sprite.getY(), enemyRadius, 16);
+				shapeRenderer.circle(enemy.sprite.getX(), enemy.sprite.getY(), enemy.radius, 16);
 			}
 			shapeRenderer.end();
 		}
