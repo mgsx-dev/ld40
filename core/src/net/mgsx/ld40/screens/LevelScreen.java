@@ -1,5 +1,6 @@
 package net.mgsx.ld40.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -74,9 +75,9 @@ public class LevelScreen extends ScreenAdapter
 
 	private Vector2 exitPosition;
 	
-	public LevelScreen() {
+	public LevelScreen(String mapName) {
 		shapeRenderer = new ShapeRenderer();
-		map = new TmxMapLoader().load("level0.tmx");
+		map = new TmxMapLoader().load(mapName);
 		mapWidth = map.getProperties().get("width", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class);
 		groundLayer = (TiledMapTileLayer) map.getLayers().get(0);
@@ -247,7 +248,7 @@ public class LevelScreen extends ScreenAdapter
 		else if(heroExiting){
 			if(tails.size <= 0){
 				// TODO end : spawn transition from main screen.
-				
+				((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
 			}else{
 				updateHeroMove();
 				if(tails.first().position.dst(exitPosition) < 64){ // XXX

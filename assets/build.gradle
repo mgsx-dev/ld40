@@ -62,6 +62,7 @@ assetsPrepareTasks << gdxRawCopy("src/skin", "$buildDir/skin")
 // assetsPrepareTasks << gimpExportLayers("assets-src/skins/hud-skin/bt.xcf", "$buildDir/skins/hud-skin/unpacked")
 
 assetsPrepareTasks << inkscapeExport("src/skin/panel.9.svg", "$buildDir/skin")
+assetsPrepareTasks << inkscapeExport("src/skin/bt-up.9.svg", "$buildDir/skin")
 
 def packTask = gdxAtlasPack("$buildDir/skin", "../android/assets/skin/skin")
 

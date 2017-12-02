@@ -3,7 +3,7 @@ package net.mgsx.ld40;
 import com.badlogic.gdx.Game;
 
 import net.mgsx.ld40.assets.LevelAssets;
-import net.mgsx.ld40.screens.LevelScreen;
+import net.mgsx.ld40.screens.MenuScreen;
 
 public class LD40 extends Game {
 	
@@ -13,9 +13,9 @@ public class LD40 extends Game {
 		
 		LevelAssets.i = new LevelAssets();
 		
-		setScreen(new LevelScreen());
+		// setScreen(new LevelScreen());
 		
-		// setScreen(new MenuScreen());
+		setScreen(new MenuScreen());
 	}
 	
 }

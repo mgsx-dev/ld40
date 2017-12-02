@@ -8,5 +8,8 @@ com.badlogic.gdx.graphics.Color: {
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white }
 	
+},
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: { up: bt-up, font: default-font, fontColor: white },
 }
 }

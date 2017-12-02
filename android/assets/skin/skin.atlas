@@ -4,6 +4,15 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+bt-up
+  rotate: false
+  xy: 2, 2
+  size: 62, 62
+  split: 23, 23, 23, 23
+  pad: 10, 11, 9, 8
+  orig: 62, 62
+  offset: 0, 0
+  index: -1
 default
   rotate: false
   xy: 2, 66
@@ -13,7 +22,7 @@ default
   index: -1
 panel
   rotate: false
-  xy: 2, 2
+  xy: 516, 516
   size: 62, 62
   split: 23, 23, 23, 23
   pad: 10, 11, 9, 8
