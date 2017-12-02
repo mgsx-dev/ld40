@@ -321,10 +321,11 @@ public class LevelScreen extends ScreenAdapter
 			}
 		}
 		else{
-			if(exitPosition.dst(playerPosition) < 64){ // XXX maybe use cell
+			if(exitPosition.dst(playerPosition) < playerRadius * 2){ // XXX maybe use cell
 				heroExiting = true;
 				dir = Dir.UP; // XXX force direction to prevent a bug
 				actionTime = 0;
+				playerPosition.set(exitPosition); // Quick fix
 				Rules.tailsWhenExit = tails.size;
 				LevelAssets.i.sndWin.play();
 			}else{
