@@ -21,8 +21,10 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTile.BlendMode;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -94,6 +96,21 @@ public class LevelScreen extends ScreenAdapter
 		
 		shapeRenderer = new ShapeRenderer();
 		map = new TmxMapLoader().load(Rules.levelMap);
+		
+		for(TiledMapTileSet ts : map.getTileSets()){
+			int imageWidth = ts.getProperties().get("imagewidth", Integer.class);
+			int tileWidth = ts.getProperties().get("tilewidth", Integer.class);
+			int width = imageWidth / tileWidth;
+			for(TiledMapTile tile : ts){
+				int tx = tile.getId() % width;
+				int ty = tile.getId() / width;
+				if(ty >= 12 && tx < 6)
+					tile.setBlendMode(BlendMode.ALPHA);
+				else
+					tile.setBlendMode(BlendMode.NONE);
+			}
+		}
+		
 		mapWidth = map.getProperties().get("width", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class);
 		groundLayer = (TiledMapTileLayer) map.getLayers().get(0);
@@ -428,8 +445,8 @@ public class LevelScreen extends ScreenAdapter
 		
 		camera.update();
 		
-		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//		Gdx.gl.glClearColor(0, 0, 0, 0);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		renderer.setView(camera);
 		renderer.render(BG_LAYERS);
