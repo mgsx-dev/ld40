@@ -1,0 +1,217 @@
+
+buildscript {
+	repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+    dependencies {
+    	classpath "com.badlogicgames.gdx:gdx-tools:1.9.6"
+    }
+}
+
+// TODO warning for toolchain version mismatch !
+
+// TODO error when multiple targets to same PNG (eg. font and svg with same name !)
+
+apply plugin: 'base' 
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+import com.badlogic.gdx.tools.hiero.Hiero
+import com.badlogic.gdx.tools.texturepacker.TextureUnpacker
+
+eclipse.project {
+    name = appName + "-assets"
+}
+
+ext{
+	spritesheets = []
+}
+
+def atlasSrcDir = "$projectDir/src"
+def atlasWorkDir = "$buildDir/unpacked"
+def atlasOutDir = "$buildDir/packed"
+def assetsOutDir = "$projectDir/../android/assets/skins"
+def g3dWorkDir = "$buildDir/g3d"
+
+task prepareAssets << {
+	new File(atlasWorkDir).mkdirs()
+	new File(atlasOutDir).mkdirs()
+	new File(g3dWorkDir).mkdirs()
+}
+
+task inkscapeAvailable(type: Exec){
+	commandLine 'inkscape', '-V'
+}
+
+// TODO : new URL('the url').withInputStream{ i -> outfile.withOutputStream{ it << i }}
+
+task gdxHieroDownload(type: Exec) {
+	def tmpDir = System.getProperty('java.io.tmpdir')
+	def tmp = "/tmp/runnable-hiero.jar"
+	commandLine 'wget', '-O', tmp, 'https://libgdx.badlogicgames.com/nightlies/runnables/runnable-hiero.jar'
+	outputs.upToDateWhen { new File(tmp).exists() }
+}
+
+fileTree(atlasSrcDir) {
+    include '**/*.hiero'
+}.each {File inFile ->
+    def name = inFile.name.take(inFile.name.lastIndexOf('.'))
+	task "editFont_${name}"(type: Exec, dependsOn: [gdxHieroDownload]) {
+	  group = "assets"
+	  description = "Edit hiero file"
+		commandLine 'java', '-jar', "/tmp/runnable-hiero.jar", '-i', inFile
+   } 
+}
+
+
+task gdxHiero(type: Exec, dependsOn: gdxHieroDownload, group: 'gdx') {
+	def tmp = "/tmp/runnable-hiero.jar"
+	commandLine 'java', '-jar', tmp
+}
+
+
+task rawAssets(type: Copy, dependsOn: prepareAssets) {
+	from atlasSrcDir
+	into atlasWorkDir
+	include "*.png"
+	duplicatesStrategy 'exclude'
+}
+
+task genAssets {}
+
+task packAssets(dependsOn: [rawAssets, genAssets]) << {
+	TexturePacker.process("$atlasWorkDir/", "$atlasOutDir/", "game-skin")
+}
+
+fileTree(atlasSrcDir) {
+    include '**/*.hiero'
+}.each {File inFile ->
+    def name = inFile.name.take(inFile.name.lastIndexOf('.'))
+	genAssets.dependsOn += task "genFont_${name}"(type: Exec, dependsOn: [gdxHieroDownload, prepareAssets]) {
+	  group = "assets"
+	  description = "Generate hiero file"
+		def outFile1 = new File("$atlasWorkDir/$name" + ".png")
+		def outFile2 = new File("$atlasWorkDir/$name" + ".fnt")
+		commandLine 'java', '-jar', "/tmp/runnable-hiero.jar", '-b', '-i', inFile, '-o', "$atlasWorkDir/$name"
+		outputs.upToDateWhen { outFile1.exists() && inFile.lastModified() < outFile1.lastModified() && outFile2.exists() && inFile.lastModified() < outFile2.lastModified() }
+   } 
+}
+
+fileTree(atlasSrcDir) {
+    include '**/*.svg'
+}.each {File inFile ->
+    def name = inFile.name.take(inFile.name.lastIndexOf('.'))
+	genAssets.dependsOn += task "genSVG_${name}"(type: Exec, dependsOn: [prepareAssets, inkscapeAvailable]) {
+	  group = "assets"
+	  description = "Generate SVG file"
+		def outFile = new File("$atlasWorkDir/$name" + ".png")
+		commandLine 'inkscape', '-z', "-e=$outFile", "$inFile"
+		outputs.upToDateWhen { outFile.exists() && inFile.lastModified() < outFile.lastModified() }
+   } 
+   
+   task "editSVG_${name}"(type: Exec, dependsOn: inkscapeAvailable) {
+	  group = "assets"
+	  description = "Edit SVG file"
+	  commandLine 'inkscape', "$inFile"
+   } 
+}
+
+task unpackAssets << {
+	new File("$buildDir/base").mkdirs()
+	TextureUnpacker.main("$projectDir/../android/assets/skins/game-skin.atlas", "$projectDir/../android/assets/skins/", "$buildDir/base/")
+}
+
+task blenderAvailable(type: Exec){
+	commandLine "blender", "-b", "-v"
+}
+
+def blenderExportScript = '''
+
+import sys
+import bpy
+
+output,*_ = sys.argv[sys.argv.index("--") + 1:]
+
+bpy.ops.export_scene.fbx(
+	filepath=output, 
+	check_existing=False, 
+	global_scale=0.01, 
+	use_tspace=True, # 2.7 new
+	use_custom_props=True, # 2.7 new
+	add_leaf_bones=False,
+	
+	bake_anim_step=1,
+	bake_anim_simplify_factor=1,
+	use_anim_optimize=True, 
+	anim_optimize_precision=6,
+	
+	path_mode='STRIP' # AUTO was not good (see https://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Autodesk_FBX), strip remove all folder locations (good when used in atlas .. ?)
+	)
+
+'''
+
+def blenderExportScriptFile = new File("$g3dWorkDir/fbxExport.py")
+
+task installBlenderScript(dependsOn: prepareAssets){
+	doLast{
+		blenderExportScriptFile.write blenderExportScript
+	}
+	outputs.upToDateWhen { blenderExportScriptFile.exists() /*&& buildscript.sourceFile.lastModified() < blenderExportScriptFile.lastModified()*/ }
+}
+
+def fbxConvFile = new File("$buildDir/fbxconv")
+
+task fbxConvAvailable(type: Exec) {
+	commandLine 'fbx-conv', '-?'
+	ignoreExitValue true
+}
+
+fileTree(atlasSrcDir) {
+    include 'models/**/*.blend' // XXX prevent auto model export !
+}.each {File inFile ->
+    def name = inFile.name.take(inFile.name.lastIndexOf('.'))
+    def fbxOutFile = new File("$g3dWorkDir/$name" + ".fbx")
+    def fbxExportTaskName = "genFBX_${name}"
+    def g3dOutFile = new File("$projectDir/../android/assets/${name}.g3dj")
+    
+	def fbxExportTask = task "$fbxExportTaskName"(type: Exec, dependsOn: [blenderAvailable, installBlenderScript]) {
+	  	group = "assets"
+	  	description = "Export FBX"
+	  
+	  	// workaround for stderr capture from blender when exit code is not zero fails, we check expected out instead.
+	  
+		commandLine 'blender', '-b', "$inFile", "--python-exit-code", "0", "-P", "$blenderExportScriptFile", "--", "$fbxOutFile"
+		outputs.upToDateWhen { fbxOutFile.exists() && inFile.lastModified() < fbxOutFile.lastModified() && blenderExportScriptFile.lastModified() < fbxOutFile.lastModified() }
+   
+	    doLast {
+	         if ( !(fbxOutFile.exists() && inFile.lastModified() < fbxOutFile.lastModified()) ) {
+	             throw new GradleException("exec failed; see output above")
+	         }
+	    }
+   }
+   
+   genAssets.dependsOn += task "genG3D_${name}"(type: Exec, dependsOn: [fbxConvAvailable, fbxExportTask]) {
+   		group = "assets"
+   		description = "Convert FBX to G3D"
+   		commandLine 'fbx-conv', '-o', 'G3DJ', "$fbxOutFile", "$g3dOutFile"
+   		outputs.upToDateWhen { g3dOutFile.exists() && fbxOutFile.lastModified() < g3dOutFile.lastModified() }
+   }
+
+}
+
+
+
+task updateAssets(type: Copy, dependsOn: [packAssets]){
+	from atlasOutDir
+	from(atlasWorkDir){
+		include "*.fnt"
+	}
+	into assetsOutDir
+}
+
+// Attach to gradle check phase
+check.dependsOn += [inkscapeAvailable, blenderAvailable]
+
+apply from: 'gradle/custom.gradle'
