@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="32" height="32" tilewidth="64" tileheight="64" nextobjectid="24">
+ <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="256" columns="16">
+  <image source="tileset.png" width="1024" height="1024"/>
+  <terraintypes>
+   <terrain name="New Terrain" tile="105"/>
+  </terraintypes>
+  <tile id="41" terrain="0,0,0,"/>
+  <tile id="42" terrain="0,0,,0"/>
+  <tile id="57" terrain="0,,0,0"/>
+  <tile id="58" terrain=",0,0,0"/>
+  <tile id="88" terrain=",,,0"/>
+  <tile id="89" terrain=",,0,0"/>
+  <tile id="90" terrain=",,0,"/>
+  <tile id="104" terrain=",0,,0"/>
+  <tile id="105" terrain="0,0,0,0"/>
+  <tile id="106" terrain="0,,0,"/>
+  <tile id="120" terrain=",0,,"/>
+  <tile id="121" terrain="0,0,,"/>
+  <tile id="122" terrain="0,,,"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztllEOwkAIRPc8egN7EusJqieoXl742ATJDrAVazRLMj/dto+SAVrKiD3jTJpJly+9ayFdSaeEHOq7bhue6X1u8HP5B9Ijic9emoG0x7bk7PEtaU6m/1fSHejo8LNqgALVeTVy24Pvnf0Kv87els/5bCqvvSHPM/ja+7IHp2L3wSf4PE+093v5uqZohnBIH+tZVvtS5hHhL+o76jtQnbw6yvkg87P4kWtRPopsfu8s7eWj/SJ9Hq2B7E2PL+/t2TPIx17O+lv5Xu3H1o6J9L9Wa/+39pn1j+DtXyv3d/89UL7ZjBEj/jmeiyZ3qg==
+  </data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" name="player" x="1886" y="180" width="26" height="25"/>
+  <object id="4" name="b1" type="balls" x="1274" y="944">
+   <polyline points="0,0 1,152"/>
+  </object>
+  <object id="5" name="b2" type="balls" x="1578" y="1316">
+   <polyline points="0,0 -1,348"/>
+  </object>
+  <object id="6" name="m" type="mushroom" x="232" y="1410" width="40" height="42"/>
+  <object id="9" name="m" type="mushroom" x="1886" y="771" width="40" height="42"/>
+  <object id="10" name="m" type="mushroom" x="1836" y="433" width="40" height="42"/>
+  <object id="11" name="m" type="mushroom" x="366" y="1523" width="40" height="42"/>
+  <object id="12" name="m" type="mushroom" x="380" y="1125" width="40" height="42"/>
+  <object id="13" name="b" type="balls" x="572" y="1320">
+   <polyline points="0,0 0,-178 -316,-172 -318,220 -56,220"/>
+  </object>
+  <object id="14" name="b2" type="balls" x="1190" y="372">
+   <polyline points="0,0 -1,348"/>
+  </object>
+  <object id="15" name="b2" type="balls" x="1232" y="402">
+   <polyline points="0,0 -1,348"/>
+  </object>
+  <object id="16" name="b2" type="balls" x="1280" y="452">
+   <polyline points="0,0 -1,348"/>
+  </object>
+  <object id="17" name="b2" type="balls" x="1336" y="416">
+   <polyline points="0,0 -1,348"/>
+  </object>
+  <object id="18" type="mushroom" x="1490" y="610">
+   <polyline points="0,0 -2,416 -438,410"/>
+  </object>
+  <object id="19" type="mushroom" x="1420" y="948">
+   <polyline points="0,0 248,0 248,206 80,118 0,118"/>
+  </object>
+  <object id="20" name="m" type="mushroom" x="1980" y="941" width="40" height="42"/>
+  <object id="21" name="m" type="mushroom" x="1890" y="1195" width="40" height="42"/>
+  <object id="22" name="m" type="mushroom" x="1884" y="1445" width="40" height="42"/>
+  <object id="23" type="mushroom" x="1788" y="878">
+   <polyline points="0,0 354,0"/>
+  </object>
+ </objectgroup>
+ <layer name="Tile Layer 2" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+  </data>
+ </layer>
+</map>

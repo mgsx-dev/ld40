@@ -75,7 +75,7 @@ public class LevelScreen extends ScreenAdapter
 	
 	public LevelScreen() {
 		shapeRenderer = new ShapeRenderer();
-		map = new TmxMapLoader().load("level0.tmx");
+		map = new TmxMapLoader().load("level1.tmx");
 		mapWidth = map.getProperties().get("width", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class);
 		groundLayer = (TiledMapTileLayer) map.getLayers().get(0);
@@ -136,7 +136,7 @@ public class LevelScreen extends ScreenAdapter
 				}
 				enemy.time = 0;
 				enemy.speed = 1; // TODO
-				enemy.sprite.setPosition(enemy.path.first().x, enemy.path.first().y);
+				enemy.position.set(enemy.path.first().x, enemy.path.first().y);
 				
 				enemies.add(enemy);
 			}
@@ -148,7 +148,7 @@ public class LevelScreen extends ScreenAdapter
 	
 	
 	private void updateHeroMove(){
-		float speed = 2;
+		float speed = 2 + tails.size / 2;
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
 			dir = Dir.RIGHT;
 		}else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
