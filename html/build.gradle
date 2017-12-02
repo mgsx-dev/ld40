@@ -37,16 +37,29 @@ task dist(dependsOn: [clean, compileGwt]) {
         copy {
             from "build/gwt/out"
             into "build/dist"
+            exclude 'WEB-INF', 'html/clear.cache.gif', 'html/html.devmode.js'
         }
         copy {
             from "webapp"
             into "build/dist"
-            }
+            exclude 'WEB-INF'
+        }
         copy {
             from "war"
             into "build/dist"
+            exclude 'WEB-INF'
         }
     }
+}
+
+task validateDist(type: Exec /*, dependsOn: dist*/) {
+	commandLine 'ruby', '-e', "require 'sinatra' ; set public_folder: '$buildDir/dist' ; set bind: '0.0.0.0'"
+}
+
+task distZip(type: Zip, /*, dependsOn: dist*/){
+	from 'build/dist/'
+   	archiveName "dist-${version}.zip"
+   	destinationDir(file("build"))
 }
 
 draftWar {
