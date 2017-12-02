@@ -167,15 +167,14 @@ public class LevelScreen extends ScreenAdapter
 	
 	
 	private void updateHeroControl(){
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+		if(Gdx.input.isKeyPressed(Input.Keys.D)){
 			dir = Dir.RIGHT;
-		}else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+		}else if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.Q)){
 			dir = Dir.LEFT;
 		}
-		else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+		else if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.Z)){
 			dir = Dir.UP;
-		}else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+		}else if(Gdx.input.isKeyPressed(Input.Keys.S)){
 			dir = Dir.DOWN;
 		}
 		
