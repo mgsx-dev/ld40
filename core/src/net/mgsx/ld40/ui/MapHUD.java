@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 
+import net.mgsx.ld40.assets.LevelAssets;
 import net.mgsx.ld40.model.Rules;
 import net.mgsx.ld40.screens.LevelScreen;
 import net.mgsx.ld40.screens.MenuScreen;
@@ -160,6 +161,7 @@ public class MapHUD extends Table
 	}
 	
 	private Table popup(Table table){
+		LevelAssets.i.sndGUI.play();
 		Table popup = new Table(getSkin());
 		popup.setFillParent(true);
 		popup.add(table).expand().center();

@@ -317,6 +317,7 @@ public class LevelScreen extends ScreenAdapter
 				heroExiting = true;
 				dir = Dir.UP; // XXX force direction to prevent a bug
 				actionTime = 0;
+				LevelAssets.i.sndWin.play();
 			}else{
 				updateHeroControl();
 				updateHeroMove();
@@ -356,6 +357,7 @@ public class LevelScreen extends ScreenAdapter
 						heroTarget = enemy;
 						eatTime = 0;
 						enemy.locked = true;
+						LevelAssets.i.sndBlup.play();
 					}
 				}
 			}else if(enemy.isHurting && hurtingEnemy == null){
@@ -369,6 +371,9 @@ public class LevelScreen extends ScreenAdapter
 					Rules.life--;
 					if(Rules.life <= 0){
 						isDying = true;
+						LevelAssets.i.sndLoose.play();
+					}else{
+						LevelAssets.i.sndHurt.play();
 					}
 					
 					// TODO ray cast collider !

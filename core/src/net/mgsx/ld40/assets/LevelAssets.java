@@ -1,6 +1,7 @@
 package net.mgsx.ld40.assets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -26,6 +27,8 @@ public class LevelAssets {
 
 	private TextureAtlas enemiesAtlas;
 	
+	public Sound sndBlup, sndGUI, sndHurt, sndLoose, sndWin;
+	
 	public Skin skin;
 	
 	public LevelAssets() 
@@ -45,6 +48,12 @@ public class LevelAssets {
 		tailBump = createAnimation(tailSprites, .2f, PlayMode.LOOP_PINGPONG, 1, 4);
 		
 		enemiesAtlas = new TextureAtlas(Gdx.files.internal("enemies.atlas"));
+		
+		sndBlup = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-blup.wav"));
+		sndGUI = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-gui.wav"));
+		sndHurt = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-hurt.wav"));
+		sndLoose = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-loose.wav"));
+		sndWin = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-win.wav"));
 	}
 	
 	private Animation<Sprite> createAnimation(Array<Sprite> sprites, float duration, PlayMode playMode, int start, int end) {
