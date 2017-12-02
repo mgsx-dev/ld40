@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="32" height="32" tilewidth="64" tileheight="64" nextobjectid="2">
+ <tileset firstgid="1" name="tileset" tilewidth="64" tileheight="64" tilecount="256" columns="16">
+  <image source="tileset.png" width="1024" height="1024"/>
+  <terraintypes>
+   <terrain name="New Terrain" tile="105"/>
+  </terraintypes>
+  <tile id="41" terrain="0,0,0,"/>
+  <tile id="42" terrain="0,0,,0"/>
+  <tile id="57" terrain="0,,0,0"/>
+  <tile id="58" terrain=",0,0,0"/>
+  <tile id="88" terrain=",,,0"/>
+  <tile id="89" terrain=",,0,0"/>
+  <tile id="90" terrain=",,0,"/>
+  <tile id="104" terrain=",0,,0"/>
+  <tile id="105" terrain="0,0,0,0"/>
+  <tile id="106" terrain="0,,0,"/>
+  <tile id="120" terrain=",0,,"/>
+  <tile id="121" terrain="0,0,,"/>
+  <tile id="122" terrain="0,,,"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztlAEKgCAMRT2P3aBOop6gOkF1+SY0GDKhYibBf/BBRfzbnDoHAABAEkiRlIz2PWUmLaRV8WKlyr5W/rzGGkmTGFvVIFTOLf09aRBzqxpoeUYRk5Z/S/+76umf7+Lo6G/Z/xtpvyT76yt/ht+BF/HU4uIetfyLan+LfJ8ta8H3UPZVXuf8tdpY9eGb2AAA4C+cHmA9Nw==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="1" name="player" x="768" y="1028" width="26" height="25"/>
+ </objectgroup>
+ <layer name="Tile Layer 2" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+  </data>
+ </layer>
+</map>
