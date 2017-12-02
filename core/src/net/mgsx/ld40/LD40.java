@@ -14,6 +14,8 @@ public class LD40 extends Game {
 		LevelAssets.i = new LevelAssets();
 		
 		setScreen(new LevelScreen());
+		
+		// setScreen(new MenuScreen());
 	}
 	
 }

@@ -1,12 +1,12 @@
 package net.mgsx.ld40.assets;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -26,10 +26,12 @@ public class LevelAssets {
 
 	private TextureAtlas enemiesAtlas;
 	
-	
+	public Skin skin;
 	
 	public LevelAssets() 
 	{
+		skin = new Skin(Gdx.files.internal("skin/skin.json"));
+		
 		TextureAtlas heroAtlas = new TextureAtlas(Gdx.files.internal("hero.atlas"));
 		Array<Sprite> heroSprites = heroAtlas.createSprites("hero");
 		

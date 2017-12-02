@@ -47,4 +47,31 @@ heroAnimTask.dependsOn += [heroFramesTask, tailFramesTask]
 assetsTasks << heroAnimTask
 assetsTasks << enemiesPackTask
 
+
+
+
+
+/////////////////////// SKIN
+
+def assetsPrepareTasks = []
+
+assetsPrepareTasks << gdxHieroExport("src/skin/default.hiero", "$buildDir/skin")
+
+assetsPrepareTasks << gdxRawCopy("src/skin", "$buildDir/skin")
+
+// assetsPrepareTasks << gimpExportLayers("assets-src/skins/hud-skin/bt.xcf", "$buildDir/skins/hud-skin/unpacked")
+
+assetsPrepareTasks << inkscapeExport("src/skin/panel.9.svg", "$buildDir/skin")
+
+def packTask = gdxAtlasPack("$buildDir/skin", "../android/assets/skin/skin")
+
+packTask.dependsOn += assetsPrepareTasks
+
+assetsTasks << packTask
+
+
+
+///////////////////////////
+
+
 task generateAssets(dependsOn: assetsTasks, group: "gdx"){}
