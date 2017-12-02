@@ -3,13 +3,19 @@ package net.mgsx.ld40.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -18,15 +24,22 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import net.mgsx.ld40.assets.LevelAssets;
 import net.mgsx.ld40.assets.LevelAssets.Dir;
+import net.mgsx.ld40.model.Enemy;
 import net.mgsx.ld40.utils.MapIntersector;
 
 public class LevelScreen extends ScreenAdapter
 {
+	private static boolean debug = false;
+	
 	private TiledMap map;
 	private TiledMapRenderer renderer;
 	private OrthographicCamera camera;
@@ -38,6 +51,8 @@ public class LevelScreen extends ScreenAdapter
 	private float time;
 	private Dir dir = Dir.DOWN;
 	
+	private ShapeRenderer shapeRenderer;
+	
 	private int mapWidth, mapHeight;
 	
 	private TiledMapTileLayer groundLayer;
@@ -45,7 +60,13 @@ public class LevelScreen extends ScreenAdapter
 	private static final int [] FG_LAYERS = {2};
 	private static final int [] BG_LAYERS = {0,1};
 	
+	private Array<Enemy> enemies = new Array<Enemy>();
+	
+	private Enemy heroTarget = null;
+	private float eatTime;
+	
 	public LevelScreen() {
+		shapeRenderer = new ShapeRenderer();
 		map = new TmxMapLoader().load("level0.tmx");
 		mapWidth = map.getProperties().get("width", Integer.class);
 		mapHeight = map.getProperties().get("height", Integer.class);
@@ -80,17 +101,45 @@ public class LevelScreen extends ScreenAdapter
 		camera.position.x = playerPosition.x;
 		camera.position.y = playerPosition.y;
 		
+		for(MapObject object : map.getLayers().get("objects").getObjects()){
+			String type = object.getProperties().get("type", null, String.class);
+			if(type != null){
+				
+				Enemy enemy = new Enemy();
+				
+				enemy.sprite = LevelAssets.i.getSprite(type);
+				
+				if(object instanceof PolylineMapObject){
+					Polyline polyline = ((PolylineMapObject) object).getPolyline();
+					float [] verts = polyline.getTransformedVertices();
+					for(int i=0 ; i<verts.length ; i+=2){
+						enemy.path.add(new Vector2(verts[i], verts[i+1]));
+					}
+				}else if(object instanceof CircleMapObject){
+					Circle c = ((CircleMapObject) object).getCircle();
+					enemy.path.add(new Vector2(c.x, c.y)); // TODO
+				}else if(object instanceof EllipseMapObject){
+					Ellipse e = ((EllipseMapObject) object).getEllipse();
+					enemy.path.add(new Vector2(e.x, e.y)); // TODO
+					
+				}else if(object instanceof RectangleMapObject){
+					enemy.path.add(((RectangleMapObject) object).getRectangle().getCenter(new Vector2()));// TODO
+				}
+				enemy.time = 0;
+				enemy.speed = 1; // TODO
+				enemy.sprite.setPosition(enemy.path.first().x, enemy.path.first().y);
+				
+				enemies.add(enemy);
+			}
+		}
+		
 	}
 	
-	@Override
-	public void render(float delta) {
-		
-		time += delta;
-		
-		float playerRadius = .25f * 64;
-		
+	private Vector2 p = new Vector2();
+	
+	
+	private void updateHeroMove(){
 		float speed = 2;
-		
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
 			dir = Dir.RIGHT;
 		}else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
@@ -138,6 +187,70 @@ public class LevelScreen extends ScreenAdapter
 			playerPosition.x = ix * 64;
 			playerPosition.y = iy * 64;
 		}
+	}
+	
+	@Override
+	public void render(float delta) {
+		
+		time += delta;
+		
+		float playerRadius = 64 * .5f;
+		float enemyRadius = 64 * .5f;
+		
+		if(heroTarget != null){
+			float eatSpeed = 2;
+			eatTime += delta * eatSpeed;
+			
+			p.set(heroTarget.sprite.getX(), heroTarget.sprite.getY());
+			
+			p.lerp(playerPosition, eatTime * eatTime);
+			heroTarget.sprite.setPosition(p.x, p.y);
+			
+			if(eatTime > 1){
+				enemies.removeValue(heroTarget, true);
+				// TODO inc hero stats and explosion or something ...
+				heroTarget = null;
+			}
+			
+		}else{
+			updateHeroMove();
+		}
+		
+		
+		// update enemies
+		for(Enemy enemy : enemies){
+			if(!enemy.locked && enemy.path.size > 1){
+				Vector2 a = enemy.path.get(enemy.pathIndex);
+				Vector2 b = enemy.path.get(enemy.pathIndex + enemy.pathDir);
+				float len = a.dst(b);
+				
+				enemy.time += 1 * enemy.speed / len; // XXX
+				if(enemy.time > 1){
+					enemy.time = 0;
+					enemy.pathIndex += enemy.pathDir;
+					int nextPathIndex = enemy.pathIndex + enemy.pathDir;
+					if(nextPathIndex >= enemy.path.size || nextPathIndex < 0){
+						enemy.pathDir = -enemy.pathDir;
+					}
+				}
+				a = enemy.path.get(enemy.pathIndex);
+				b = enemy.path.get(enemy.pathIndex + enemy.pathDir);
+				p.set(a).lerp(b, enemy.time);
+				enemy.sprite.setPosition(p.x, p.y);
+			}
+			
+			if(heroTarget == null){
+				float ex = enemy.sprite.getX();
+				float ey = enemy.sprite.getY();
+				float dst2 = playerPosition.dst2(ex, ey);
+				float radius = playerRadius + enemyRadius;
+				if(dst2 < radius*radius){
+					heroTarget = enemy;
+					eatTime = 0;
+					enemy.locked = true;
+				}
+			}
+		}
 		
 
 		float progress = 1f * delta;
@@ -165,9 +278,17 @@ public class LevelScreen extends ScreenAdapter
 		
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
+		
+		for(Enemy enemy : enemies){
+			
+			enemy.sprite.draw(batch);
+		}
+		
 		Sprite hero = LevelAssets.i.hero.get(dir.ordinal()).getKeyFrame(time);
 		hero.setPosition(playerPosition.x, playerPosition.y);
 		hero.draw(batch);
+		
+		
 		batch.end();
 		
 		for(int i : FG_LAYERS){
@@ -176,6 +297,17 @@ public class LevelScreen extends ScreenAdapter
 		
 		renderer.render(FG_LAYERS);
 
+		if(debug){
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.setColor(Color.BLUE);
+			shapeRenderer.circle(playerPosition.x, playerPosition.y, playerRadius, 16);
+			for(Enemy enemy : enemies){
+				shapeRenderer.circle(enemy.sprite.getX(), enemy.sprite.getY(), enemyRadius, 16);
+			}
+			shapeRenderer.end();
+		}
+		
 	}
 	
 	@Override

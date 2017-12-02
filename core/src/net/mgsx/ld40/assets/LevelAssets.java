@@ -1,11 +1,14 @@
 package net.mgsx.ld40.assets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class LevelAssets {
 
@@ -16,6 +19,8 @@ public class LevelAssets {
 	}
 	
 	public Array<Animation<Sprite>> hero;
+	
+	private ObjectMap<String, TextureRegion> regions = new ObjectMap<String, TextureRegion>();
 	
 	public LevelAssets() 
 	{
@@ -39,6 +44,15 @@ public class LevelAssets {
 		int count = sprites.size / 4;
 		frames.addAll(sprites, dir.ordinal() * count, count);
 		return new Animation<Sprite>(.1f, frames, PlayMode.LOOP); // TODO pingpong
+	}
+
+	public Sprite getSprite(String type) {
+		TextureRegion region = regions.get(type);
+		if(region == null){
+			// TODO use atlas ... for perf.
+			regions.put(type, region = new TextureRegion(new Texture(type + ".png")));
+		}
+		return new Sprite(region);
 	}
 	
 }

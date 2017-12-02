@@ -30,6 +30,7 @@ def assetsDir = "$projectDir/../android/assets"
 def assetsTasks = []
 
 assetsTasks << blenderRenderFrame("src/tileset.blend", 1, "$assetsDir/tileset.png")
+assetsTasks << blenderRenderFrame("src/mushroom.blend", 1, "$assetsDir/mushroom.png")
 
 def heroFramesTask = blenderRenderAnimation("src/hero.blend", "$buildDir/hero/hero")
 
