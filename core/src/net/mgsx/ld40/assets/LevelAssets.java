@@ -23,12 +23,15 @@ public class LevelAssets {
 	public Animation<Sprite> tailIdle, tailGrow, tailExplode, tailBump;
 	
 	private ObjectMap<String, TextureRegion> regions = new ObjectMap<String, TextureRegion>();
+
+	private TextureAtlas enemiesAtlas;
+	
+	
 	
 	public LevelAssets() 
 	{
 		TextureAtlas heroAtlas = new TextureAtlas(Gdx.files.internal("hero.atlas"));
 		Array<Sprite> heroSprites = heroAtlas.createSprites("hero");
-		
 		
 		hero = createAnimation(heroSprites); 
 		
@@ -39,6 +42,7 @@ public class LevelAssets {
 		tailExplode = createAnimation(tailSprites, .2f, PlayMode.NORMAL, 10, 14);
 		tailBump = createAnimation(tailSprites, .2f, PlayMode.LOOP_PINGPONG, 1, 4);
 		
+		enemiesAtlas = new TextureAtlas(Gdx.files.internal("enemies.atlas"));
 	}
 	
 	private Animation<Sprite> createAnimation(Array<Sprite> sprites, float duration, PlayMode playMode, int start, int end) {
@@ -61,13 +65,11 @@ public class LevelAssets {
 		return new Animation<Sprite>(.1f, frames, PlayMode.LOOP); // TODO pingpong
 	}
 
-	public Sprite getSprite(String type) {
-		TextureRegion region = regions.get(type);
-		if(region == null){
-			// TODO use atlas ... for perf.
-			regions.put(type, region = new TextureRegion(new Texture(type + ".png")));
-		}
-		return new Sprite(region);
+	public Sprite getEnemySprite(String type) {
+		return enemiesAtlas.createSprite(type);
 	}
-	
+	public Animation<Sprite> getEnemyAnimation(String type) {
+		return new Animation<Sprite>(.2f, enemiesAtlas.createSprites(type), PlayMode.LOOP_PINGPONG);
+	}
+
 }

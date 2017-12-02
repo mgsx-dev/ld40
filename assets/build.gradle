@@ -30,7 +30,13 @@ def assetsDir = "$projectDir/../android/assets"
 def assetsTasks = []
 
 assetsTasks << blenderRenderFrame("src/tileset.blend", 1, "$assetsDir/tileset.png")
-assetsTasks << blenderRenderFrame("src/mushroom.blend", 1, "$assetsDir/mushroom.png")
+
+def mushroomFramesTask = blenderRenderFrame("src/mushroom.blend", 1, "$buildDir/enemies/mushroom.png")
+def ballsFramesTask = blenderRenderAnimation("src/balls.blend", "$buildDir/enemies/balls")
+
+def enemiesPackTask = gdxAtlasPack("$buildDir/enemies", "../android/assets/enemies")
+enemiesPackTask.dependsOn += [mushroomFramesTask, ballsFramesTask]
+
 
 def heroFramesTask = blenderRenderAnimation("src/hero.blend", "$buildDir/hero/hero")
 def tailFramesTask = blenderRenderAnimation("src/tail.blend", "$buildDir/hero/tail")
@@ -39,5 +45,6 @@ def heroAnimTask = gdxAtlasPack("$buildDir/hero", "../android/assets/hero")
 heroAnimTask.dependsOn += [heroFramesTask, tailFramesTask]
 
 assetsTasks << heroAnimTask
+assetsTasks << enemiesPackTask
 
 task generateAssets(dependsOn: assetsTasks, group: "gdx"){}

@@ -65,6 +65,11 @@ public class LevelScreen extends ScreenAdapter
 	
 	private Array<Tail> tails = new Array<Tail>();
 	
+	private Vector2 hurtEnd = new Vector2();
+	private Vector2 hurtStart = new Vector2();
+	private Enemy hurtingEnemy = null;
+	private float actionTime;
+	
 	private Enemy heroTarget = null;
 	private float eatTime;
 	
@@ -108,9 +113,10 @@ public class LevelScreen extends ScreenAdapter
 			String type = object.getProperties().get("type", null, String.class);
 			if(type != null){
 				
-				Enemy enemy = new Enemy();
+				Enemy enemy = new Enemy(type);
 				
-				enemy.sprite = LevelAssets.i.getSprite(type);
+				enemy.animation = LevelAssets.i.getEnemyAnimation(type);
+				enemy.sprite = new Sprite(enemy.animation.getKeyFrame(0));
 				
 				if(object instanceof PolylineMapObject){
 					Polyline polyline = ((PolylineMapObject) object).getPolyline();
@@ -159,7 +165,8 @@ public class LevelScreen extends ScreenAdapter
 		
 		playerPosition.add(playerVelocity);
 		
-		
+	}
+	private void checkHeroWalls(){
 		// check border collision (TODO fix the rounding depends on direction...)
 		int ix =  MathUtils.round(playerPosition.x / 64);
 		int iy =  MathUtils.round(playerPosition.y / 64);
@@ -176,13 +183,8 @@ public class LevelScreen extends ScreenAdapter
 		}
 		
 		boolean collide = true;
-		if(nx>=0 && nx<mapWidth && ny>=0 && ny<mapHeight){
-			Cell cell = groundLayer.getCell(nx, ny);
-			if(cell != null){
-				if(!cell.getTile().getProperties().get("solid", false, Boolean.class)){
-					collide = false;
-				}
-			}
+		if(!isSolid(nx, ny)){
+			collide = false;
 		}
 		
 		if(collide){
@@ -207,7 +209,7 @@ public class LevelScreen extends ScreenAdapter
 			p.set(heroTarget.sprite.getX(), heroTarget.sprite.getY());
 			
 			p.lerp(playerPosition, eatTime * eatTime);
-			heroTarget.sprite.setPosition(p.x, p.y);
+			heroTarget.position.set(p);
 			
 			if(eatTime > 1){
 				enemies.removeValue(heroTarget, true);
@@ -225,9 +227,24 @@ public class LevelScreen extends ScreenAdapter
 				
 			}
 			
-		}else{
-			updateHeroMove();
 		}
+		else if(hurtingEnemy != null){
+			actionTime += delta * 10;
+			if(actionTime > 1){
+				playerPosition.set(hurtEnd);
+				hurtingEnemy = null;
+			}else{
+				
+				float it = 1 - actionTime;
+				playerPosition.set(hurtStart).lerp(hurtEnd, 1 - it*it);
+			}
+			
+		}
+		else{
+			updateHeroMove();
+			checkHeroWalls();
+		}
+		
 		
 		
 		// update enemies
@@ -249,20 +266,46 @@ public class LevelScreen extends ScreenAdapter
 				a = enemy.path.get(enemy.pathIndex);
 				b = enemy.path.get(enemy.pathIndex + enemy.pathDir);
 				p.set(a).lerp(b, enemy.time);
-				enemy.sprite.setPosition(p.x, p.y);
+				enemy.position.set(p);
 			}
 			
-			if(heroTarget == null){
-				float ex = enemy.sprite.getX();
-				float ey = enemy.sprite.getY();
-				float dst2 = playerPosition.dst2(ex, ey);
-				float radius = playerRadius + enemyRadius;
-				if(dst2 < radius*radius){
-					heroTarget = enemy;
-					eatTime = 0;
-					enemy.locked = true;
+			if(enemy.isEatable){
+				if(heroTarget == null){
+					float dst2 = playerPosition.dst2(enemy.position);
+					float radius = playerRadius + enemyRadius; // TODO extra range ?
+					if(dst2 < radius*radius){
+						heroTarget = enemy;
+						eatTime = 0;
+						enemy.locked = true;
+					}
 				}
+			}else if(enemy.isHurting && hurtingEnemy == null){
+				float dst2 = playerPosition.dst2(enemy.position);
+				float radius = playerRadius + enemyRadius;
+				if(dst2 < radius*radius)
+				{
+					hurtingEnemy = enemy;
+					actionTime = 0;
+					
+					// TODO ray cast collider !
+					int dx = -(dir == Dir.RIGHT ? 1 : (dir == Dir.LEFT ? -1 : 0));
+					int dy = -(dir == Dir.UP ? 1 : (dir == Dir.DOWN ? -1 : 0));
+					int ix =  MathUtils.floor(playerPosition.x / 64);
+					int iy =  MathUtils.floor(playerPosition.y / 64);
+					hurtStart.set(playerPosition);
+					hurtEnd.set(playerPosition);
+					for(int i=0 ; i<2 ; i++){
+						if(isSolid(ix+dx, iy+dy)){
+							break;
+						}
+						ix += dx;
+						iy += dy;
+						hurtEnd.add(dx * 64, dy * 64);
+					}
+				}
+				// TODO check with tails as well !
 			}
+			enemy.update(delta);
 		}
 		
 		// update tails
@@ -302,7 +345,6 @@ public class LevelScreen extends ScreenAdapter
 		batch.setProjectionMatrix(camera.combined);
 		
 		for(Enemy enemy : enemies){
-			
 			enemy.sprite.draw(batch);
 		}
 		
@@ -336,6 +378,23 @@ public class LevelScreen extends ScreenAdapter
 		
 	}
 	
+	/**
+	 * @param nx
+	 * @param ny
+	 * @return true if can't go here
+	 */
+	private boolean isSolid(int nx, int ny) {
+		if(nx>=0 && nx<mapWidth && ny>=0 && ny<mapHeight){
+			Cell cell = groundLayer.getCell(nx, ny);
+			if(cell != null){
+				if(!cell.getTile().getProperties().get("solid", false, Boolean.class)){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public void resize(int width, int height) {
 		camera.setToOrtho(false, width, height);
