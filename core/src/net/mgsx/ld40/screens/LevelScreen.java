@@ -221,7 +221,7 @@ public class LevelScreen extends ScreenAdapter
 	
 	private void updateHeroMove(){
 		
-		float speed = 2 + tails.size / 2;
+		float speed = 2 + tails.size * .5f;
 		
 		playerVelocity.x = (dir == Dir.RIGHT ? 1 : (dir == Dir.LEFT ? -1 : 0)) * speed;
 		playerVelocity.y = (dir == Dir.UP ? 1 : (dir == Dir.DOWN ? -1 : 0)) * speed;
@@ -463,7 +463,7 @@ public class LevelScreen extends ScreenAdapter
 		}
 		
 
-		float progress = 1f * delta;
+		float progress = 2f * delta;
 		if(playerPosition.dst(camera.position.x, camera.position.y) > 0){
 			
 			camera.position.x = MathUtils.lerp(camera.position.x, playerPosition.x, progress);
