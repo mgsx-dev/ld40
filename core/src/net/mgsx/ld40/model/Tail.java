@@ -16,6 +16,8 @@ public class Tail {
 	public Animation<Sprite> animation, nextAnimation;
 	public float radius = 16;
 	public boolean isDying;
+
+	public float animSpeed = 1;
 	
 	public void setCreate(Vector2 head){
 		animation = LevelAssets.i.tailGrow;
@@ -25,7 +27,7 @@ public class Tail {
 	}
 	
 	public void update(float deltaTime, Vector2 head, float distance){
-		time += deltaTime;
+		time += deltaTime * animSpeed;
 		
 		float dst = position.dst(head);
 		float maxDst = distance + radius;

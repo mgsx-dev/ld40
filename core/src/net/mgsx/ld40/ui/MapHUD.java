@@ -176,7 +176,6 @@ public class MapHUD extends Table
 	}
 	
 	private Table popup(Table table){
-		LevelAssets.i.sndGUI.play();
 		Table popup = new Table(getSkin());
 		popup.setFillParent(true);
 		popup.add(table).expand().center();

@@ -273,8 +273,8 @@ public class LevelScreen extends ScreenAdapter
 				if(!tails.peek().isDying) tails.peek().setDying();
 				if(tails.peek().animation == null){
 					tails.pop();
-					if(tails.size > 0)
-						LevelAssets.i.sndHurt.play();
+//					if(tails.size > 0)
+//						LevelAssets.i.sndHurt.play(Rules.SFX_VOLUME);
 				}
 			}
 			
@@ -304,7 +304,7 @@ public class LevelScreen extends ScreenAdapter
 				if(heroTarget.isLife){
 					if(Rules.life < Rules.maxLife){
 						Rules.life++;
-						LevelAssets.i.sndGUI.play(); // TODO snd life !
+						LevelAssets.i.sndGUI.play(Rules.SFX_VOLUME);
 					}
 				}
 					
@@ -343,7 +343,7 @@ public class LevelScreen extends ScreenAdapter
 				actionTime = 0;
 				playerPosition.set(exitPosition); // Quick fix
 				Rules.tailsWhenExit = tails.size;
-				LevelAssets.i.sndWin.play();
+				LevelAssets.i.sndWin.play(Rules.SFX_VOLUME);
 			}else{
 				updateHeroControl();
 				updateHeroMove();
@@ -383,7 +383,7 @@ public class LevelScreen extends ScreenAdapter
 						heroTarget = enemy;
 						eatTime = 0;
 						enemy.locked = true;
-						LevelAssets.i.sndBlup.play();
+						LevelAssets.i.sndBlup.play(Rules.SFX_VOLUME);
 					}
 				}
 			}else if(enemy.isHurting && hurtingEnemy == null){
@@ -397,9 +397,13 @@ public class LevelScreen extends ScreenAdapter
 					Rules.life--;
 					if(Rules.life <= 0){
 						isDying = true;
-						LevelAssets.i.sndLoose.play();
+						LevelAssets.i.sndLoose.play(Rules.SFX_VOLUME);
+						for(Tail tail : tails){
+							tail.animSpeed = tails.size / 5f;
+						}
+						
 					}else{
-						LevelAssets.i.sndHurt.play();
+						LevelAssets.i.sndHurt.play(Rules.SFX_VOLUME);
 					}
 					
 					// TODO ray cast collider !

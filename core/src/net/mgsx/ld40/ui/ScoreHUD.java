@@ -47,7 +47,7 @@ public class ScoreHUD extends Table
 					Actions.run(new Runnable() {
 						@Override
 						public void run() {
-							LevelAssets.i.sndBlup.play();
+							LevelAssets.i.sndBlup.play(Rules.SFX_VOLUME);
 						}
 					}),
 					Actions.scaleTo(2, 2, 0.1f),
@@ -78,7 +78,7 @@ public class ScoreHUD extends Table
 					Actions.run(new Runnable() {
 						@Override
 						public void run() {
-							LevelAssets.i.sndGUI.play();
+							LevelAssets.i.sndGUI.play(Rules.SFX_VOLUME);
 						}
 					}),
 					Actions.scaleTo(2, 2, 0.1f),

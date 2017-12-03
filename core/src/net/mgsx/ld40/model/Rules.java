@@ -5,6 +5,8 @@ public class Rules {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 	
+	public static final float SFX_VOLUME = 0.2f;
+	
 	public static final int maxLife = 12;
 	public static final int startLife = 3;
 	public static int life;
