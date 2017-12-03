@@ -1,23 +1,18 @@
 package net.mgsx.ld40.ui;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
 import net.mgsx.ld40.assets.LevelAssets;
 import net.mgsx.ld40.model.Rules;
-import net.mgsx.ld40.screens.LevelScreen;
 
 public class ScoreHUD extends Table
 {
@@ -27,9 +22,10 @@ public class ScoreHUD extends Table
 		setBackground("panel");
 		defaults().expandX().center().pad(12);
 		
-		add(Rules.levelTitle + " Completed !").row();
+		add(Rules.levelTitle + " Completed !").pad(4).row();
 		
-		add("" + Rules.levelSubTitle + " bonus :").row();
+		add(Rules.levelSubTitle).pad(4).row();
+		add("Life Bonus").pad(4).row();
 
 		Table tailsTable = new Table(getSkin());
 		add(tailsTable).row();

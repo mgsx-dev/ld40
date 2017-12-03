@@ -1,5 +1,7 @@
 package net.mgsx.ld40.model;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 public class Rules {
 	
 	public static final int WIDTH = 800;
@@ -17,25 +19,37 @@ public class Rules {
 	public static String levelMap;
 	
 	public static int tailsWhenExit;
+	public static String levelHints;
+	public static String levelWords;
 	
 	
 	public static boolean initLevel() 
 	{
 		if(levelID == 1){
 			levelTitle = "Level 1";
-			levelSubTitle = "Something to eat";
+			levelSubTitle = "Nibble at the Clearing";
+			levelHints = "Help crazy snake to find the forest exit.";
+			levelWords = "but don't be too greedy...";
 		}else if(levelID == 2){
 			levelTitle = "Level 2";
-			levelSubTitle = "Not too greedy";
+			levelSubTitle = "Dangerous Hungry";
+			levelHints = "Watch out for thorns !";
+			levelWords = "empcry yourself at your own risk...";
 		}else if(levelID == 3){
 			levelTitle = "Level 3";
-			levelSubTitle = "Take care !";
+			levelSubTitle = "Self-serve Buffet";
+			levelHints = "Things moving .. take care !";
+			levelWords = "greed is a bad thing...";
 		}else if(levelID == 4){
 			levelTitle = "Level 4";
-			levelSubTitle = "Starter before Dessert !";
+			levelSubTitle = "The Starter before the Dessert !";
+			levelHints = "It becomes challenging !";
+			levelWords = "attention to indigestion...";
 		}else if(levelID == 5){
 			levelTitle = "Level 5";
-			levelSubTitle = "Whooooo !";
+			levelSubTitle = "The devil's Feast";
+			levelHints = "Final meal !";
+			levelWords = "eat as much as you can... or not";
 		}else{
 			return false;
 		}

@@ -73,8 +73,16 @@ public class MapHUD extends Table
 		
 		final Table popup = popup(panel);
 		
-		panel.add("GET READY").row();
-		panel.add("Crazy snake is ready !\n press any key to start").row();
+		panel.defaults().pad(4);
+		
+		panel.add(Rules.levelTitle).row();
+		panel.add(Rules.levelSubTitle).padBottom(30).row();
+		
+		panel.add(Rules.levelHints).row();
+		panel.add("(" + Rules.levelWords + ")").row();
+		
+		
+		panel.add("GET READY and press any key to start").padTop(30).row();
 		
 		TextButton bt;
 		panel.add(bt = new TextButton("Start", getSkin()){

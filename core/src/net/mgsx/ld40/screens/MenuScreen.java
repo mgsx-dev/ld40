@@ -17,6 +17,8 @@ import net.mgsx.ld40.model.Rules;
 
 public class MenuScreen extends ScreenAdapter
 {
+	private static boolean BACKDOOR = true;
+	
 	private Stage stage;
 	private Skin skin;
 	
@@ -34,11 +36,14 @@ public class MenuScreen extends ScreenAdapter
 		table.add("CRAZY SNAKE").row();
 		table.add("The Greedy Adventure").row();
 		table.add(createMenuButton("Play", 1)).row();
-		table.add(createMenuButton("Level 1", 1)).row();
-		table.add(createMenuButton("Level 2", 2)).row();
-		table.add(createMenuButton("Level 3", 3)).row();
-		table.add(createMenuButton("Level 4", 4)).row();
-		table.add(createMenuButton("Level 5", 5)).row();
+		
+		if(BACKDOOR){
+			table.add(createMenuButton("Level 1", 1)).row();
+			table.add(createMenuButton("Level 2", 2)).row();
+			table.add(createMenuButton("Level 3", 3)).row();
+			table.add(createMenuButton("Level 4", 4)).row();
+			table.add(createMenuButton("Level 5", 5)).row();
+		}
 		
 		Table root = new Table();
 		root.add(table).expand().center();

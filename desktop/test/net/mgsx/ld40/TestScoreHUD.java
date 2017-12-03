@@ -33,7 +33,7 @@ public class TestScoreHUD extends Game{
 				
 				Rules.levelTitle = "Level 1";
 				Rules.levelSubTitle = "The demon forest hidden";
-				Rules.tailsWhenExit = 12;
+				Rules.tailsWhenExit = 24;
 				
 				ScoreHUD hud = new ScoreHUD(LevelAssets.i.skin);
 				root.add(hud).expand().center();
