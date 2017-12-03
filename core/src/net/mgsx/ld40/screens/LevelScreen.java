@@ -505,6 +505,8 @@ public class LevelScreen extends ScreenAdapter
 		hero.setPosition(playerPosition.x, playerPosition.y);
 		hero.draw(batch);
 		
+		enemies.sort();
+		
 		for(Enemy enemy : enemies){
 			enemy.sprite.draw(batch);
 		}
