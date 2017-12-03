@@ -4,12 +4,16 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import net.mgsx.ld40.assets.LevelAssets;
@@ -17,10 +21,12 @@ import net.mgsx.ld40.model.Rules;
 
 public class MenuScreen extends ScreenAdapter
 {
-	private static boolean BACKDOOR = true;
+	private static boolean BACKDOOR = false;
 	
 	private Stage stage;
 	private Skin skin;
+
+	private TextButton btPlay;
 	
 	public MenuScreen() {
 		stage = new Stage(new ScreenViewport());
@@ -32,18 +38,21 @@ public class MenuScreen extends ScreenAdapter
 		
 		Table table = new Table(skin);
 		table.defaults().pad(4);
-		table.setBackground("panel");
-		table.add("CRAZY SNAKE").row();
-		table.add("The Greedy Adventure").row();
-		table.add(createMenuButton("Play", 1)).row();
+
+		table.setBackground(new TextureRegionDrawable(new TextureRegion(LevelAssets.i.cover)));
 		
 		if(BACKDOOR){
+			table.add(btPlay = createMenuButton("Play", 1)).row();
 			table.add(createMenuButton("Level 1", 1)).row();
 			table.add(createMenuButton("Level 2", 2)).row();
 			table.add(createMenuButton("Level 3", 3)).row();
 			table.add(createMenuButton("Level 4", 4)).row();
 			table.add(createMenuButton("Level 5", 5)).row();
+		}else{
+			table.add(btPlay = createMenuButton("Play", 1)).expand().bottom().padBottom(40);
 		}
+		btPlay.setTransform(true);
+		btPlay.setOrigin(Align.center);
 		
 		Table root = new Table();
 		root.add(table).expand().center();
@@ -52,7 +61,7 @@ public class MenuScreen extends ScreenAdapter
 		
 	}
 	
-	private Actor createMenuButton(String name, final int mapId){
+	private TextButton createMenuButton(String name, final int mapId){
 		TextButton bt = new TextButton(name, skin);
 		bt.addListener(new ChangeListener() {
 			@Override
@@ -67,6 +76,12 @@ public class MenuScreen extends ScreenAdapter
 	
 	public void render(float delta)
 	{
+		if(!btPlay.hasActions()){
+			btPlay.addAction(Actions.sequence(
+				Actions.scaleTo(1.2f, 1.2f, .5f),
+				Actions.scaleTo(1, 1, .5f)
+					));
+		}
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		

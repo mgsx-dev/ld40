@@ -2,6 +2,7 @@ package net.mgsx.ld40.assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -19,6 +20,8 @@ public class LevelAssets {
 		DOWN, RIGHT, UP, LEFT
 	}
 	
+	public Texture cover;
+	
 	public Array<Animation<Sprite>> hero;
 	
 	public Animation<Sprite> tailIdle, tailGrow, tailExplode, tailBump, heroEating;
@@ -33,6 +36,8 @@ public class LevelAssets {
 	
 	public LevelAssets() 
 	{
+		cover = new Texture(Gdx.files.internal("cover.png"));
+		
 		skin = new Skin(Gdx.files.internal("skin/skin.json"));
 		
 		TextureAtlas heroAtlas = new TextureAtlas(Gdx.files.internal("hero.atlas"));
