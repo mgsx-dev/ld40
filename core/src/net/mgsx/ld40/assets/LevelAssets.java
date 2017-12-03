@@ -39,8 +39,8 @@ public class LevelAssets {
 	
 	public LevelAssets() 
 	{
-		song1 = Gdx.audio.newMusic(Gdx.files.internal("music/song1.ogg"));
-		song2 = Gdx.audio.newMusic(Gdx.files.internal("music/song2.ogg"));
+		song1 = Gdx.audio.newMusic(Gdx.files.internal("music/song1.mp3"));
+		song2 = Gdx.audio.newMusic(Gdx.files.internal("music/song2.mp3"));
 		
 		cover = new Texture(Gdx.files.internal("cover.png"));
 		
