@@ -264,7 +264,7 @@ public class LevelScreen extends ScreenAdapter
 		}
 		else if(isDying){
 			if(tails.size == 0){
-				actionTime += delta * .5f;
+				actionTime += delta * 1.5f;
 				if(actionTime > 1){
 					isPaused  = true;
 					hud.setGameOver();
@@ -330,8 +330,8 @@ public class LevelScreen extends ScreenAdapter
 				hud.setLevelComplete();
 			}else{
 				updateHeroMove();
-				if(tails.first().position.dst(exitPosition) < 64){ // XXX
-					playerPosition.set(tails.first().position);
+				if(exitPosition.dst(playerPosition) > playerRadius * 2){ // XXX
+					playerPosition.y -= playerRadius; //.set(tails.first().position);
 					tails.removeIndex(0);
 				}
 			}
@@ -341,7 +341,7 @@ public class LevelScreen extends ScreenAdapter
 				heroExiting = true;
 				dir = Dir.UP; // XXX force direction to prevent a bug
 				actionTime = 0;
-				playerPosition.set(exitPosition); // Quick fix
+				// playerPosition.set(exitPosition); // Quick fix
 				Rules.tailsWhenExit = tails.size;
 				LevelAssets.i.sndWin.play(Rules.SFX_VOLUME);
 			}else{
