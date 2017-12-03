@@ -85,7 +85,7 @@ public class MapHUD extends Table
 		panel.add("GET READY and press any key to start").padTop(30).row();
 		
 		TextButton bt;
-		panel.add(bt = new TextButton("Start", getSkin()){
+		panel.add(bt = new TextButton("Start\n(press any key)", getSkin()){
 			@Override
 			public void act(float delta) {
 				if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)){
@@ -160,7 +160,7 @@ public class MapHUD extends Table
 			panel.add("GAME COMPLETE").row();
 			panel.add("You finished the game!\nCongratulation!\nThanks for playing!").row();
 			TextButton bt;
-			panel.add(bt = new TextButton("Game to main menu", getSkin())).row();
+			panel.add(bt = new TextButton("Back to main menu", getSkin())).row();
 			bt.addListener(new ChangeListener() {
 				
 				@Override

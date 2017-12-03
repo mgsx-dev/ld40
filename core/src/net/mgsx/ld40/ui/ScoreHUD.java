@@ -1,5 +1,7 @@
 package net.mgsx.ld40.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -91,15 +94,23 @@ public class ScoreHUD extends Table
 			}
 		}));
 		
-		addAction(seq);
+		final TextButton bt = new TextButton("Next\n(press enter)", getSkin()){
+			@Override
+			public void act(float delta) {
+				if(!ScoreHUD.this.hasActions() && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+					fire(new ChangeListener.ChangeEvent());
+				}
+				super.act(delta);
+			}
+		};
+		add(bt).row();
 		
-		TextButton bt;
-		add(bt = new TextButton("Next", getSkin())).row();
-//		bt.addListener(new ChangeListener() {
-//			@Override
-//			public void changed(ChangeEvent event, Actor actor) {
-//				((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
-//			}
-//		});
+		bt.getColor().a = 0;
+		
+		Action btShow = Actions.alpha(1, .1f);
+		btShow.setActor(bt);
+		seq.addAction(btShow);
+		
+		addAction(seq);
 	}
 }
