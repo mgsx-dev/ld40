@@ -33,6 +33,7 @@ public class MenuScreen extends ScreenAdapter
 		Gdx.input.setInputProcessor(stage);
 		
 		LevelAssets.i.song1.setLooping(true);
+		LevelAssets.i.song1.setVolume(0.8f);
 		LevelAssets.i.song1.play();
 		
 		Rules.life = Rules.startLife;
