@@ -119,7 +119,15 @@ public class MapHUD extends Table
 		panel.add("Crazy snake is dead ... \nhe was certainly not cautious enough ...\n or too greedy !").row();
 		
 		TextButton bt;
-		panel.add(bt = new TextButton("Back to main menu", getSkin())).row();
+		panel.add(bt = new TextButton("Back to main menu\n(press enter)", getSkin()){
+			@Override
+			public void act(float delta) {
+				if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+					((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+				}
+				super.act(delta);
+			}
+		}).row();
 		bt.addListener(new ChangeListener() {
 			
 			@Override
