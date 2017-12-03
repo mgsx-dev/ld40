@@ -21,7 +21,7 @@ public class LevelAssets {
 	
 	public Array<Animation<Sprite>> hero;
 	
-	public Animation<Sprite> tailIdle, tailGrow, tailExplode, tailBump;
+	public Animation<Sprite> tailIdle, tailGrow, tailExplode, tailBump, heroEating;
 	
 	private ObjectMap<String, TextureRegion> regions = new ObjectMap<String, TextureRegion>();
 
@@ -47,6 +47,8 @@ public class LevelAssets {
 		tailExplode = createAnimation(tailSprites, .08f, PlayMode.NORMAL, 10, 14);
 		tailBump = createAnimation(tailSprites, .2f, PlayMode.LOOP_PINGPONG, 1, 4);
 		
+		heroEating = createAnimation(heroSprites, .2f, PlayMode.LOOP_PINGPONG, 34, 38);
+		
 		enemiesAtlas = new TextureAtlas(Gdx.files.internal("enemies.atlas"));
 		
 		sndBlup = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-blup.wav"));
@@ -71,7 +73,7 @@ public class LevelAssets {
 	}
 	private Animation<Sprite> createAnimation(Array<Sprite> sprites, Dir dir){
 		Array<Sprite> frames = new Array<Sprite>();
-		int count = sprites.size / 4;
+		int count = 8;
 		frames.addAll(sprites, dir.ordinal() * count, count);
 		return new Animation<Sprite>(.1f, frames, PlayMode.LOOP); // TODO pingpong
 	}

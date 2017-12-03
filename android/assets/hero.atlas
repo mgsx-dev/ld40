@@ -235,100 +235,135 @@ hero
   orig: 64, 64
   offset: 0, 0
   index: 29
-tail
+hero
   rotate: false
   xy: 464, 134
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 1
-tail
-  rotate: false
-  xy: 464, 134
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: 5
-tail
-  rotate: false
-  xy: 464, 134
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: 10
-tail
+  index: 34
+hero
   rotate: false
   xy: 398, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 2
-tail
+  index: 35
+hero
   rotate: false
   xy: 464, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 3
-tail
+  index: 36
+hero
   rotate: false
   xy: 530, 134
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 4
-tail
+  index: 37
+hero
   rotate: false
   xy: 464, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 6
+  index: 38
 tail
   rotate: false
   xy: 530, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 7
+  index: 1
+tail
+  rotate: false
+  xy: 530, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 5
+tail
+  rotate: false
+  xy: 530, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 10
 tail
   rotate: false
   xy: 596, 134
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 8
+  index: 2
 tail
   rotate: false
   xy: 530, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 9
+  index: 3
 tail
   rotate: false
   xy: 596, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 11
+  index: 4
 tail
   rotate: false
   xy: 662, 134
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 12
+  index: 6
 tail
   rotate: false
   xy: 596, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 13
+  index: 7
 tail
   rotate: false
   xy: 662, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 8
+tail
+  rotate: false
+  xy: 728, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 9
+tail
+  rotate: false
+  xy: 662, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 11
+tail
+  rotate: false
+  xy: 728, 68
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 12
+tail
+  rotate: false
+  xy: 794, 134
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 13
+tail
+  rotate: false
+  xy: 728, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

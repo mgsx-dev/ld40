@@ -458,18 +458,30 @@ public class LevelScreen extends ScreenAdapter
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		
-		for(Enemy enemy : enemies){
-			enemy.sprite.draw(batch);
-		}
-		
 		for(Tail tail : tails){
 			tail.sprite.draw(batch);
 		}
 		
-		Sprite hero = LevelAssets.i.hero.get(dir.ordinal()).getKeyFrame(time);
+		Sprite hero;
+		if(isDying){
+			hero = LevelAssets.i.heroEating.getKeyFrame(1);
+			hero.setRotation(time * 180);
+			hero.setScale(1.5f + .1f * MathUtils.sin(time * 5));
+		}else if(heroTarget != null){
+			hero = LevelAssets.i.heroEating.getKeyFrame(eatTime * 1.5f);
+			hero.setScale(1.5f);
+			hero.setRotation(0);
+		}else{
+			hero = LevelAssets.i.hero.get(dir.ordinal()).getKeyFrame(time);
+			hero.setScale(1);
+			hero.setRotation(0);
+		}
 		hero.setPosition(playerPosition.x, playerPosition.y);
 		hero.draw(batch);
 		
+		for(Enemy enemy : enemies){
+			enemy.sprite.draw(batch);
+		}
 		
 		batch.end();
 		
