@@ -128,9 +128,9 @@ public class LevelScreen extends ScreenAdapter
 		
 		MapLayer objectLayer = map.getLayers().get(1);
 		
-		playerPosition = ((RectangleMapObject) objectLayer.getObjects().get("player")).getRectangle().getCenter(new Vector2());
+		playerPosition = ((RectangleMapObject) objectLayer.getObjects().get("player")).getRectangle().getPosition(new Vector2()).add(-32, -32);
 		
-		exitPosition = ((RectangleMapObject)objectLayer.getObjects().get("exit")).getRectangle().getCenter(new Vector2());
+		exitPosition = ((RectangleMapObject)objectLayer.getObjects().get("exit")).getRectangle().getPosition(new Vector2()).add(-32, -32);
 		
 		batch = new SpriteBatch();
 		
@@ -152,7 +152,7 @@ public class LevelScreen extends ScreenAdapter
 					Polyline polyline = ((PolylineMapObject) object).getPolyline();
 					float [] verts = polyline.getTransformedVertices();
 					for(int i=0 ; i<verts.length ; i+=2){
-						enemy.path.add(new Vector2(verts[i], verts[i+1]));
+						enemy.path.add(new Vector2(verts[i], verts[i+1]).add(-32, -32));
 					}
 				}else if(object instanceof CircleMapObject){
 					Circle c = ((CircleMapObject) object).getCircle();
@@ -162,7 +162,7 @@ public class LevelScreen extends ScreenAdapter
 					enemy.path.add(new Vector2(e.x, e.y)); // TODO
 					
 				}else if(object instanceof RectangleMapObject){
-					enemy.path.add(((RectangleMapObject) object).getRectangle().getCenter(new Vector2()));// TODO
+					enemy.path.add(((RectangleMapObject) object).getRectangle().getPosition(new Vector2()).add(-32, -32));// TODO
 				}
 				enemy.time = 0;
 				enemy.speed = 1; // TODO
