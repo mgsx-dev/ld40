@@ -406,7 +406,6 @@ public class LevelScreen extends ScreenAdapter
 						LevelAssets.i.sndHurt.play(Rules.SFX_VOLUME);
 					}
 					
-					// TODO ray cast collider !
 					int dx = -(dir == Dir.RIGHT ? 1 : (dir == Dir.LEFT ? -1 : 0));
 					int dy = -(dir == Dir.UP ? 1 : (dir == Dir.DOWN ? -1 : 0));
 					int ix =  MathUtils.floor(playerPosition.x / 64);
@@ -507,9 +506,9 @@ public class LevelScreen extends ScreenAdapter
 	}
 	
 	private void clipCameraToMap() {
-		float mapWidth = map.getProperties().get("width", Integer.class) * 64;
-		float mapHeight = map.getProperties().get("height", Integer.class) * 64;
-		
+		float mapWidth = this.mapWidth * 64;
+		float mapHeight = this.mapHeight * 64;
+
 		camera.position.x = MathUtils.clamp(camera.position.x, Gdx.graphics.getWidth()/2, mapWidth - Gdx.graphics.getWidth()/2);
 		camera.position.y = MathUtils.clamp(camera.position.y, Gdx.graphics.getHeight()/2, mapHeight - Gdx.graphics.getHeight()/2);
 
@@ -537,6 +536,7 @@ public class LevelScreen extends ScreenAdapter
 		camera.setToOrtho(false, width, height);
 		camera.position.x = playerPosition.x;
 		camera.position.y = playerPosition.y;
+		clipCameraToMap();
 		stage.getViewport().update(width, height, true);
 	}
 }
