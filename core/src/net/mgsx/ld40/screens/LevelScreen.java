@@ -184,19 +184,39 @@ public class LevelScreen extends ScreenAdapter
 	
 	
 	private void updateHeroControl(){
+		
+		Dir newDir = null;
 		if(Gdx.input.isKeyPressed(Input.Keys.D)){
-			dir = Dir.RIGHT;
+			newDir = Dir.RIGHT;
 		}else if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.Q)){
-			dir = Dir.LEFT;
+			newDir = Dir.LEFT;
 		}
 		else if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.Z)){
-			dir = Dir.UP;
+			newDir = Dir.UP;
 		}else if(Gdx.input.isKeyPressed(Input.Keys.S)){
-			dir = Dir.DOWN;
+			newDir = Dir.DOWN;
 		}
 		
-		
-		
+		if(newDir != null)
+		{
+			int ix =  MathUtils.round(playerPosition.x / 64);
+			int iy =  MathUtils.round(playerPosition.y / 64);
+			int nx = ix;
+			int ny = iy;
+			if(newDir == Dir.RIGHT){
+				nx++;
+			}else if(newDir == Dir.LEFT){
+				nx--;
+			}else if(newDir == Dir.UP){
+				ny++;
+			}else if(newDir == Dir.DOWN){
+				ny--;
+			}
+			
+			if(!isSolid(nx, ny)){
+				dir = newDir;
+			}
+		}
 	}
 	
 	private void updateHeroMove(){
@@ -231,9 +251,16 @@ public class LevelScreen extends ScreenAdapter
 		}
 		
 		if(collide){
-			dir = Dir.values()[(dir.ordinal()+1)%4];
-			playerPosition.x = ix * 64;
-			playerPosition.y = iy * 64;
+			// random ortho dir
+			if(dir == Dir.LEFT || dir == Dir.RIGHT){
+				dir = MathUtils.randomBoolean() ? Dir.UP : Dir.DOWN;
+			}else{
+				dir = MathUtils.randomBoolean() ? Dir.LEFT : Dir.RIGHT;
+			}
+			
+			// dir = Dir.values()[(dir.ordinal()+1)%4];
+			playerPosition.x = ix  * 64;
+			playerPosition.y = iy  * 64;
 		}
 	}
 	
