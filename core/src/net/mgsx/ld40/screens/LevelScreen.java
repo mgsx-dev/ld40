@@ -566,4 +566,15 @@ public class LevelScreen extends ScreenAdapter
 		clipCameraToMap();
 		stage.getViewport().update(width, height, true);
 	}
+	
+	@Override
+	public void dispose() {
+		
+		batch.dispose();
+		map.dispose();
+		shapeRenderer.dispose();
+		stage.dispose();
+		
+		super.dispose();
+	}
 }

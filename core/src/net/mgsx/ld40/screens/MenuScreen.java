@@ -93,4 +93,10 @@ public class MenuScreen extends ScreenAdapter
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
 	}
+	
+	@Override
+	public void dispose() {
+		stage.dispose();
+		super.dispose();
+	}
 }
