@@ -1,7 +1,5 @@
 package net.mgsx.ld40.model;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-
 public class Rules {
 	
 	public static final int WIDTH = 800;
@@ -34,7 +32,7 @@ public class Rules {
 			levelTitle = "Level 2";
 			levelSubTitle = "Dangerous Hungry";
 			levelHints = "Watch out for thorns !";
-			levelWords = "empcry yourself at your own risk...";
+			levelWords = "stuff your face at your own risk...";
 		}else if(levelID == 3){
 			levelTitle = "Level 3";
 			levelSubTitle = "Self-serve Buffet";
