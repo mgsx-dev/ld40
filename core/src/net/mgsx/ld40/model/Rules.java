@@ -21,14 +21,13 @@ public class Rules {
 	
 	public static boolean initLevel() 
 	{
-		if(levelID == 0){
-			life = startLife;
+		if(levelID == 1){
 			levelTitle = "Level 1";
 			levelSubTitle = "Something to eat";
-		}else if(levelID == 1){
+		}else if(levelID == 2){
 			levelTitle = "Level 2";
 			levelSubTitle = "Not too greedy";
-		}else if(levelID == 2){
+		}else if(levelID == 3){
 			levelTitle = "Level 3";
 			levelSubTitle = "Take care !";
 		}else if(levelID == 4){

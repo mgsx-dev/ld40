@@ -24,6 +24,8 @@ public class MenuScreen extends ScreenAdapter
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
+		Rules.life = Rules.startLife;
+		
 		skin = LevelAssets.i.skin;
 		
 		Table table = new Table(skin);
@@ -31,10 +33,10 @@ public class MenuScreen extends ScreenAdapter
 		table.setBackground("panel");
 		table.add("CRAZY SNAKE").row();
 		table.add("The Greedy Adventure").row();
-		table.add(createMenuButton("Play", 0)).row();
-		table.add(createMenuButton("Level 1", 0)).row();
-		table.add(createMenuButton("Level 2", 1)).row();
-		table.add(createMenuButton("Level 3", 2)).row();
+		table.add(createMenuButton("Play", 1)).row();
+		table.add(createMenuButton("Level 1", 1)).row();
+		table.add(createMenuButton("Level 2", 2)).row();
+		table.add(createMenuButton("Level 3", 3)).row();
 		table.add(createMenuButton("Level 4", 4)).row();
 		table.add(createMenuButton("Level 5", 5)).row();
 		
