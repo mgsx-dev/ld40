@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -51,7 +52,7 @@ public class LevelScreen extends ScreenAdapter
 	private static boolean debug = false;
 	
 	private TiledMap map;
-	private TiledMapRenderer renderer;
+	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private Vector2 playerPosition;
 	private Vector2 playerVelocity = new Vector2();
@@ -100,6 +101,7 @@ public class LevelScreen extends ScreenAdapter
 		map = new TmxMapLoader().load(Rules.levelMap);
 		
 		for(TiledMapTileSet ts : map.getTileSets()){
+			ts.getTile(1).getTextureRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 			int imageWidth = ts.getProperties().get("imagewidth", Integer.class);
 			int tileWidth = ts.getProperties().get("tilewidth", Integer.class);
 			int width = imageWidth / tileWidth;
@@ -125,7 +127,6 @@ public class LevelScreen extends ScreenAdapter
 		mapIntersector.offset = 4;
 		
 		renderer = new OrthogonalTiledMapRenderer(map, 1f);
-		
 		camera = new OrthographicCamera();
 		
 		MapLayer objectLayer = map.getLayers().get(1);
@@ -479,10 +480,12 @@ public class LevelScreen extends ScreenAdapter
 			clipCameraToMap();
 		}
 		
+		camera.position.x = MathUtils.round(camera.position.x);
+		camera.position.y = MathUtils.round(camera.position.y);
 		camera.update();
 		
-//		Gdx.gl.glClearColor(0, 0, 0, 0);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(.5f, .5f, .5f, 0);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		renderer.setView(camera);
 		renderer.render(BG_LAYERS);
