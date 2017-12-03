@@ -104,7 +104,7 @@ public class LevelScreen extends ScreenAdapter
 			for(TiledMapTile tile : ts){
 				int tx = tile.getId() % width;
 				int ty = tile.getId() / width;
-				if(ty >= 12 && tx < 6)
+				if(ty >= 12 && tx < 9)
 					tile.setBlendMode(BlendMode.ALPHA);
 				else
 					tile.setBlendMode(BlendMode.NONE);
