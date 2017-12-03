@@ -46,6 +46,8 @@ import net.mgsx.ld40.utils.MapIntersector;
 
 public class LevelScreen extends ScreenAdapter
 {
+	private static final boolean devMode = false;
+	
 	private static boolean debug = false;
 	
 	private TiledMap map;
@@ -275,6 +277,10 @@ public class LevelScreen extends ScreenAdapter
 //		}else{
 //			stage.act(delta);
 //		}
+		
+		if(devMode){
+			if(Gdx.input.isKeyJustPressed(Input.Keys.P)) isPaused = !isPaused;
+		}
 		
 		stage.act(delta);
 		
