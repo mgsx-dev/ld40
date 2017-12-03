@@ -121,9 +121,12 @@ public class MapHUD extends Table
 		panel.setBackground("panel");
 		
 		final Table popup = popup(panel);
+		panel.defaults().pad(4);
 		
 		panel.add("GAME OVER").row();
-		panel.add("Crazy snake is dead ... \nhe was certainly not cautious enough ...\n or too greedy !").row();
+		panel.add("Crazy snake is dead ...").row();
+		panel.add("he was certainly not cautious enough").row();
+		panel.add("... or too greedy !").row();
 		
 		TextButton bt;
 		panel.add(bt = new TextButton("Back to main menu\n(press enter)", getSkin()){
