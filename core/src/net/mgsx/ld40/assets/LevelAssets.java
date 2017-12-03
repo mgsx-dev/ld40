@@ -1,6 +1,7 @@
 package net.mgsx.ld40.assets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -32,10 +33,15 @@ public class LevelAssets {
 	
 	public Sound sndBlup, sndGUI, sndHurt, sndLoose, sndWin;
 	
+	public Music song1, song2;
+	
 	public Skin skin;
 	
 	public LevelAssets() 
 	{
+		song1 = Gdx.audio.newMusic(Gdx.files.internal("music/song1.ogg"));
+		song2 = Gdx.audio.newMusic(Gdx.files.internal("music/song2.ogg"));
+		
 		cover = new Texture(Gdx.files.internal("cover.png"));
 		
 		skin = new Skin(Gdx.files.internal("skin/skin.json"));

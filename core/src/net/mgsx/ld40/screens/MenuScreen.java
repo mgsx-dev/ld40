@@ -32,6 +32,9 @@ public class MenuScreen extends ScreenAdapter
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
+		LevelAssets.i.song1.setLooping(true);
+		LevelAssets.i.song1.play();
+		
 		Rules.life = Rules.startLife;
 		
 		skin = LevelAssets.i.skin;
@@ -69,6 +72,7 @@ public class MenuScreen extends ScreenAdapter
 				Rules.levelID = mapId;
 				Rules.initLevel();
 				((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
+				LevelAssets.i.song1.stop();
 			}
 		});
 		return bt;

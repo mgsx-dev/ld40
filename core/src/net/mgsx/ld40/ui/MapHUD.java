@@ -89,7 +89,7 @@ public class MapHUD extends Table
 			@Override
 			public void act(float delta) {
 				if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)){
-					levelScreen.isPaused = false;
+					playGame();
 					popup.remove();
 				}
 				super.act(delta);
@@ -100,15 +100,22 @@ public class MapHUD extends Table
 			
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				levelScreen.isPaused = false;
+				playGame();
 				popup.remove();
 			}
 		});
 		
 	}
+	
+	private void playGame(){
+		levelScreen.isPaused = false;
+		LevelAssets.i.song2.setLooping(true);
+		LevelAssets.i.song2.play();
+	}
 
 	public void setGameOver() 
 	{
+		LevelAssets.i.song2.stop();
 		
 		Table panel = new Table(getSkin());
 		panel.setBackground("panel");
@@ -139,6 +146,8 @@ public class MapHUD extends Table
 	}
 
 	public void setLevelComplete() {
+		
+		LevelAssets.i.song2.stop();
 		
 		ScoreHUD score = new ScoreHUD(getSkin());
 		
