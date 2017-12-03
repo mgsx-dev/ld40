@@ -147,17 +147,7 @@ public class MapHUD extends Table
 		
 		Rules.levelID++;
 		if(Rules.initLevel()){
-			panel.add("LEVEL COMPLETE").row();
-			panel.add("Crazy snake is fine ... \nnow he need to digest !").row();
-			TextButton bt;
-			panel.add(bt = new TextButton("Go to next level", getSkin())).row();
-			bt.addListener(new ChangeListener() {
-				
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
-				}
-			});
+			((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
 		}else{
 			panel.add("GAME COMPLETE").row();
 			panel.add("You finished the game!\nCongratulation!\nThanks for playing!").row();
