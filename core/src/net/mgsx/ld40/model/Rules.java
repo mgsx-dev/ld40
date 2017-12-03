@@ -31,6 +31,9 @@ public class Rules {
 		}else if(levelID == 2){
 			levelTitle = "Level 3";
 			levelSubTitle = "Take care !";
+		}else if(levelID == 4){
+			levelTitle = "Level 4";
+			levelSubTitle = "Starter before Dessert !";
 		}else if(levelID == 5){
 			levelTitle = "Level 5";
 			levelSubTitle = "Whooooo !";

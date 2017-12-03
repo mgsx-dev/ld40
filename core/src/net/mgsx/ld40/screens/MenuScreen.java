@@ -35,6 +35,7 @@ public class MenuScreen extends ScreenAdapter
 		table.add(createMenuButton("Level 1", 0)).row();
 		table.add(createMenuButton("Level 2", 1)).row();
 		table.add(createMenuButton("Level 3", 2)).row();
+		table.add(createMenuButton("Level 4", 4)).row();
 		table.add(createMenuButton("Level 5", 5)).row();
 		
 		Table root = new Table();
