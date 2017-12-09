@@ -19,7 +19,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '0.0.5'
+    version = '0.0.6'
     ext {
         appName = "mgsx-ld40"
         gdxVersion = '1.9.6'
