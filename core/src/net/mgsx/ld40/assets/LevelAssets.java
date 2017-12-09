@@ -67,6 +67,13 @@ public class LevelAssets {
 		sndHurt = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-hurt.wav"));
 		sndLoose = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-loose.wav"));
 		sndWin = Gdx.audio.newSound(Gdx.files.internal("sfx/ld40-win.wav"));
+		
+		// force sound preloading (causing lag on HTML5)
+		sndBlup.play(0);
+		sndGUI.play(0);
+		sndHurt.play(0);
+		sndLoose.play(0);
+		sndWin.play(0);
 	}
 	
 	private Animation<Sprite> createAnimation(Array<Sprite> sprites, float duration, PlayMode playMode, int start, int end) {
