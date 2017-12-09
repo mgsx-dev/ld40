@@ -1,6 +1,5 @@
 package net.mgsx.ld40.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -20,7 +19,6 @@ import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTile.BlendMode;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -48,6 +46,7 @@ import net.mgsx.ld40.utils.MapIntersector;
 public class LevelScreen extends ScreenAdapter
 {
 	private static final boolean devMode = false;
+	private static final boolean debugMove = false;
 	
 	private static boolean debug = false;
 	
@@ -55,7 +54,9 @@ public class LevelScreen extends ScreenAdapter
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private Vector2 playerPosition;
-	private Vector2 playerVelocity = new Vector2();
+	private Vector2 velocity = new Vector2();
+	private Vector2 nextPosition = new Vector2();
+	private Vector2 clipPosition = new Vector2();
 	private Batch batch;
 	private MapIntersector mapIntersector;
 	private float time;
@@ -186,7 +187,7 @@ public class LevelScreen extends ScreenAdapter
 	public boolean isPaused = true;
 	
 	
-	private void updateHeroControl(){
+	private void updateHeroControl(float delta){
 		
 		Dir newDir = null;
 		if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
@@ -202,68 +203,106 @@ public class LevelScreen extends ScreenAdapter
 		
 		if(newDir != null)
 		{
-			int ix =  MathUtils.round(playerPosition.x / 64);
-			int iy =  MathUtils.round(playerPosition.y / 64);
-			int nx = ix;
-			int ny = iy;
-			if(newDir == Dir.RIGHT){
-				nx++;
-			}else if(newDir == Dir.LEFT){
-				nx--;
-			}else if(newDir == Dir.UP){
-				ny++;
-			}else if(newDir == Dir.DOWN){
-				ny--;
-			}
+			nextPosition.set(playerPosition);
+			getNextHeroPosition(nextPosition, newDir, getHeroSpeed(delta));
 			
-			if(!isSolid(nx, ny)){
+			if(!clipWall(nextPosition, newDir)){
 				dir = newDir;
 			}
 		}
 	}
 	
-	private void updateHeroMove(){
+	private float getHeroSpeed(float delta){
+		return 2 + tails.size * .5f * delta * 60;
+	}
+	
+	private void updateHeroMove(float delta){
 		
-		float speed = 2 + tails.size * .5f;
+		float speed = getHeroSpeed(delta);
 		
-		playerVelocity.x = (dir == Dir.RIGHT ? 1 : (dir == Dir.LEFT ? -1 : 0)) * speed;
-		playerVelocity.y = (dir == Dir.UP ? 1 : (dir == Dir.DOWN ? -1 : 0)) * speed;
+		if(debugMove) speed = Gdx.input.isKeyPressed(Input.Keys.SPACE) ? 2 : 0;
 		
-		playerPosition.add(playerVelocity);
+		getNextHeroPosition(playerPosition, dir, speed);
+	}
+	
+	private void getNextHeroPosition(Vector2 position, Dir direction, float speed){
+		
+		float dx = (direction == Dir.RIGHT ? 1 : (direction == Dir.LEFT ? -1 : 0)) * speed;
+		float dy = (direction == Dir.UP ? 1 : (direction == Dir.DOWN ? -1 : 0)) * speed;
+
+		position.add(dx, dy);
+	}
+	
+	private boolean clipWall(Vector2 position, Dir dir){
+		int ix, iy;
+		
+		int margin = 1;
+		
+		boolean col = false;
+		if(dir == Dir.LEFT){
+			ix = MathUtils.floor(position.x / 64);
+			iy = MathUtils.floor(position.y / 64);
+			if(isSolid(ix, iy) || isSolid(ix, iy+1)){
+				position.x = (ix+1)  * 64 + margin;
+				col = true;
+			}
+		}
+		else if(dir == Dir.RIGHT){
+			ix = MathUtils.ceil(position.x / 64);
+			iy = MathUtils.floor(position.y / 64);
+			if(isSolid(ix, iy) || isSolid(ix, iy+1)){
+				position.x = (ix-1)  * 64 - margin;
+				col = true;
+			}
+		}
+		else if(dir == Dir.DOWN){
+			ix = MathUtils.floor(position.x / 64);
+			iy = MathUtils.floor(position.y / 64);
+			if(isSolid(ix, iy) || isSolid(ix+1, iy)){
+				position.y = (iy+1)  * 64 + margin;
+				col = true;
+			}
+		}else{
+			ix = MathUtils.floor(position.x / 64);
+			iy = MathUtils.ceil(position.y / 64);
+			if(isSolid(ix, iy) || isSolid(ix+1, iy)){
+				position.y = (iy-1)  * 64 - margin;
+				col = true;
+			}
+		}
+		
+		return col;
 	}
 	
 	private void checkHeroWalls(){
-		// check border collision (TODO fix the rounding depends on direction...)
-		int ix =  MathUtils.round(playerPosition.x / 64);
-		int iy =  MathUtils.round(playerPosition.y / 64);
-		int nx = ix;
-		int ny = iy;
-		if(dir == Dir.RIGHT){
-			nx++;
-		}else if(dir == Dir.LEFT){
-			nx--;
-		}else if(dir == Dir.UP){
-			ny++;
-		}else if(dir == Dir.DOWN){
-			ny--;
-		}
+		// check border collision
 		
-		boolean collide = true;
-		if(!isSolid(nx, ny)){
-			collide = false;
-		}
+		int ix, iy;
 		
-		if(collide){
-			// random ortho dir
+		boolean col = clipWall(playerPosition, dir);
+		
+		if(col){
+			ix = MathUtils.round(playerPosition.x / 64);
+			iy = MathUtils.round(playerPosition.y / 64);
 			if(dir == Dir.LEFT || dir == Dir.RIGHT){
-				dir = MathUtils.randomBoolean() ? Dir.UP : Dir.DOWN;
+				// lookups
+				if(isSolid(ix, iy-1)){
+					dir = Dir.UP;
+				}else if(isSolid(ix, iy+1)){
+					dir = Dir.DOWN;
+				}else{
+					dir = MathUtils.randomBoolean() ? Dir.UP : Dir.DOWN;
+				}
 			}else{
-				dir = MathUtils.randomBoolean() ? Dir.LEFT : Dir.RIGHT;
+				// lookups
+				if(isSolid(ix-1, iy))
+					dir = Dir.RIGHT;
+				else if(isSolid(ix+1, iy))
+					dir = Dir.LEFT;
+				else{
+					dir = MathUtils.randomBoolean() ? Dir.RIGHT : Dir.LEFT;
+				}
 			}
-			
-			// dir = Dir.values()[(dir.ordinal()+1)%4];
-			playerPosition.x = ix  * 64;
-			playerPosition.y = iy  * 64;
 		}
 	}
 	
@@ -363,15 +402,23 @@ public class LevelScreen extends ScreenAdapter
 				isPaused = true;
 				hud.setLevelComplete();
 			}else{
-				updateHeroMove();
-				if(exitPosition.dst(playerPosition) > playerRadius * 2){ // XXX
+				velocity.set(exitPosition).sub(playerPosition);
+				float len = velocity.len();
+				if(len < 10){ // XXX
 					playerPosition.y -= playerRadius; //.set(tails.first().position);
 					tails.removeIndex(0);
+				}else{
+					velocity.nor().scl(Math.min(4 * delta * 60, len));
+					playerPosition.add(velocity);
 				}
 			}
 		}
 		else{
-			if(exitPosition.dst(playerPosition) < playerRadius * 2){ // XXX maybe use cell
+			int ix = MathUtils.round(playerPosition.x / 64);
+			int iy = MathUtils.round(playerPosition.y / 64);
+			Cell cell = groundLayer.getCell(ix, iy);
+			boolean exitCell = cell != null && cell.getTile() != null && cell.getTile().getId() == 94;
+			if(exitCell){ // XXX maybe use cell
 				heroExiting = true;
 				dir = Dir.UP; // XXX force direction to prevent a bug
 				actionTime = 0;
@@ -379,8 +426,8 @@ public class LevelScreen extends ScreenAdapter
 				Rules.tailsWhenExit = tails.size;
 				LevelAssets.i.sndWin.play(Rules.SFX_VOLUME);
 			}else{
-				updateHeroControl();
-				updateHeroMove();
+				updateHeroControl(delta);
+				updateHeroMove(delta);
 				checkHeroWalls();
 			}
 		}
@@ -440,22 +487,19 @@ public class LevelScreen extends ScreenAdapter
 						LevelAssets.i.sndHurt.play(Rules.SFX_VOLUME);
 					}
 					
+					Dir bounceDir = Dir.values()[(dir.ordinal() + 2)%4];
+					
 					int dx = -(dir == Dir.RIGHT ? 1 : (dir == Dir.LEFT ? -1 : 0));
 					int dy = -(dir == Dir.UP ? 1 : (dir == Dir.DOWN ? -1 : 0));
-					int ix =  MathUtils.floor(playerPosition.x / 64);
-					int iy =  MathUtils.floor(playerPosition.y / 64);
 					hurtStart.set(playerPosition);
 					hurtEnd.set(playerPosition);
 					for(int i=0 ; i<2 ; i++){
-						if(isSolid(ix+dx, iy+dy)){
+						if(clipWall(hurtEnd, bounceDir)){
 							break;
 						}
-						ix += dx;
-						iy += dy;
 						hurtEnd.add(dx * 64, dy * 64);
 					}
 				}
-				// TODO check with tails as well !
 			}
 			enemy.update(delta);
 		}
@@ -465,6 +509,13 @@ public class LevelScreen extends ScreenAdapter
 		float distance = playerRadius;
 		for(Tail tail : tails){
 			tail.update(delta, head, distance);
+			clipPosition.set(tail.position);
+			clipWall(clipPosition, Dir.LEFT);
+			clipWall(clipPosition, Dir.RIGHT);
+			clipWall(clipPosition, Dir.DOWN);
+			clipWall(clipPosition, Dir.UP);
+			tail.position.lerp(clipPosition, 0.1f * delta * 60);
+			
 			head = tail.position;
 			distance = tail.radius;
 		}
