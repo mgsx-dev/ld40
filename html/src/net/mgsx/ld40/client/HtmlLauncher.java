@@ -19,4 +19,10 @@ public class HtmlLauncher extends GwtApplication {
         public ApplicationListener createApplicationListener () {
                 return new LD40();
         }
+        
+        @Override
+        public void onModuleLoad() {
+        	super.onModuleLoad();
+        	setApplicationLogger(new GwtConsoleApplicationLogger());
+        }
 }

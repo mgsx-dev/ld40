@@ -1,9 +1,10 @@
 package net.mgsx.ld40;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 
 import net.mgsx.ld40.assets.LevelAssets;
 import net.mgsx.ld40.screens.MenuScreen;
@@ -14,6 +15,8 @@ public class LD40 extends Game {
 	
 	@Override
 	public void create () {
+		
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		
 		LevelAssets.i = new LevelAssets();
 		

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -49,6 +50,11 @@ public class LevelScreen extends ScreenAdapter
 	private static final boolean debugMove = false;
 	
 	private static boolean debug = false;
+	
+	private static boolean debugClearScreen = true,
+			debugDrawBG = true, debugSortSprite = true, debugDrawEnemies = true, debugDrawFG=true, debugDrawHUD=true,
+			debugLogFPS = false, debugViewBound=true, debugVSync=true;
+	private static int debugViewBoundRate = 0;
 	
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
@@ -176,6 +182,7 @@ public class LevelScreen extends ScreenAdapter
 			}
 		}
 		
+		fpsLogger = new FPSLogger();
 	}
 	
 	private Vector2 p = new Vector2();
@@ -308,6 +315,19 @@ public class LevelScreen extends ScreenAdapter
 	
 	@Override
 	public void render(float delta) {
+		
+		// perf debug controls
+		if(Gdx.input.isKeyJustPressed(Input.Keys.C)) debugClearScreen = !debugClearScreen;
+		if(Gdx.input.isKeyJustPressed(Input.Keys.B)) debugDrawBG = !debugDrawBG; 
+		if(Gdx.input.isKeyJustPressed(Input.Keys.T)) debugSortSprite = !debugSortSprite; 
+		if(Gdx.input.isKeyJustPressed(Input.Keys.E)) debugDrawEnemies = !debugDrawEnemies; 
+		if(Gdx.input.isKeyJustPressed(Input.Keys.F)) debugDrawFG=!debugDrawFG; 
+		if(Gdx.input.isKeyJustPressed(Input.Keys.H)) debugDrawHUD=!debugDrawHUD;
+		if(Gdx.input.isKeyJustPressed(Input.Keys.L)) debugLogFPS = !debugLogFPS;
+		if(Gdx.input.isKeyJustPressed(Input.Keys.V)) debugViewBound = !debugViewBound;
+		if(Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) debugViewBoundRate++;
+		if(Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) debugViewBoundRate--;
+		if(Gdx.input.isKeyJustPressed(Input.Keys.M)) Gdx.graphics.setVSync(debugVSync = !debugVSync);
 		
 		// TODO pause screen but hide all !!!
 		
@@ -535,11 +555,24 @@ public class LevelScreen extends ScreenAdapter
 		camera.position.y = MathUtils.round(camera.position.y);
 		camera.update();
 		
-		Gdx.gl.glClearColor(.5f, .5f, .5f, 0);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if(debugClearScreen){
+			Gdx.gl.glClearColor(.5f, .5f, .5f, 0);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		}
 		
-		renderer.setView(camera);
-		renderer.render(BG_LAYERS);
+		if(debugViewBound){
+			float width = camera.viewportWidth * camera.zoom - debugViewBoundRate * 64;
+			float height = camera.viewportHeight * camera.zoom - debugViewBoundRate * 64;
+			float w = width * Math.abs(camera.up.y) + height * Math.abs(camera.up.x);
+			float h = height * Math.abs(camera.up.y) + width * Math.abs(camera.up.x);
+			renderer.setView(camera.combined, camera.position.x - w / 2, camera.position.y - h / 2, w, h);
+		}else{
+			renderer.setView(camera);
+		}
+		
+		if(debugDrawBG){
+			renderer.render(BG_LAYERS);
+		}
 		
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
@@ -565,21 +598,29 @@ public class LevelScreen extends ScreenAdapter
 		hero.setPosition(playerPosition.x, playerPosition.y);
 		hero.draw(batch);
 		
-		enemies.sort();
+		if(debugSortSprite){
+			enemies.sort();
+		}
 		
-		for(Enemy enemy : enemies){
-			enemy.sprite.draw(batch);
+		if(debugDrawEnemies){
+			for(Enemy enemy : enemies){
+				enemy.sprite.draw(batch);
+			}
 		}
 		
 		batch.end();
 		
-		for(int i : FG_LAYERS){
-			map.getLayers().get(i).setOpacity(1f);
+//		for(int i : FG_LAYERS){
+//			map.getLayers().get(i).setOpacity(1f);
+//		}
+		
+		if(debugDrawFG){
+			renderer.render(FG_LAYERS);
 		}
 		
-		renderer.render(FG_LAYERS);
-
-		stage.draw();
+		if(debugDrawHUD){
+			stage.draw();
+		}
 		
 		if(debug){
 			shapeRenderer.begin(ShapeType.Line);
@@ -592,7 +633,13 @@ public class LevelScreen extends ScreenAdapter
 			shapeRenderer.end();
 		}
 		
+		if(debugLogFPS){
+			fpsLogger.log();
+		}
+		
 	}
+	
+	private FPSLogger fpsLogger;
 	
 	private void clipCameraToMap() {
 		float mapWidth = this.mapWidth * 64;
@@ -612,6 +659,7 @@ public class LevelScreen extends ScreenAdapter
 		if(nx>=0 && nx<mapWidth && ny>=0 && ny<mapHeight){
 			Cell cell = groundLayer.getCell(nx, ny);
 			if(cell != null){
+				// TODO could be optimized by a cache map
 				if(!cell.getTile().getProperties().get("solid", false, Boolean.class)){
 					return false;
 				}
